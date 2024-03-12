@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "629803561597",
+    "project_id": "pyramid-game-25d45",
+    "storage_bucket": "pyramid-game-25d45.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:629803561597:android:58820b4f6afbc205deb714",
+        "android_client_info": {
+          "package_name": "com.example.pyramid_game"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC91-D9vm-UzVBeM-hD-4oVQXFF-C-AAtQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
