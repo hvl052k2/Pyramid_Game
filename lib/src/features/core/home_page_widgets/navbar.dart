@@ -1,0 +1,121 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:pyramid_game/src/constants/colors.dart';
+import 'package:pyramid_game/src/constants/image_strings.dart';
+import 'package:pyramid_game/src/features/authentication/screens/profile_screen/profile_screen.dart';
+import 'package:pyramid_game/src/features/authentication/screens/sign_in/sign_in_screen.dart';
+
+class NavBar extends StatefulWidget {
+  const NavBar({super.key});
+
+  @override
+  State<NavBar> createState() => _NavBarState();
+}
+
+class _NavBarState extends State<NavBar> {
+  final auth = FirebaseAuth.instance;
+
+  void showSnackBar(String message, bool status) =>
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(children: [
+            Icon(
+              status ? Icons.done_rounded : Icons.info_rounded,
+              color: whiteColor,
+              size: 30,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              message,
+              style: const TextStyle(
+                fontSize: 18,
+                color: whiteColor,
+                fontFamily: 'EBGaramond',
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ]),
+          backgroundColor: status ? Colors.green : Colors.red,
+        ),
+      );
+
+  void signOut() async {
+    await auth.signOut().then((value) => {
+          showSnackBar("Sign out successfully", true),
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => const SignInScreen(),
+            ),
+          )
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("Users")
+            .doc(auth.currentUser!.email)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final userData = snapshot.data!.data() as Map<String, dynamic>;
+            return ListView(
+              children: [
+                UserAccountsDrawerHeader(
+                  accountName: Text(userData["userName"]),
+                  accountEmail: Text(auth.currentUser!.email.toString()),
+                  currentAccountPicture: const CircleAvatar(
+                    child: ClipOval(
+                      child: Image(image: AssetImage(avatarImage)),
+                    ),
+                  ),
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage(wallImage), fit: BoxFit.cover),
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.person),
+                  title: const Text("Profile"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const ProfileScreen(),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.settings_backup_restore),
+                  title: const Text("History"),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: const Icon(Icons.settings),
+                  title: const Text("Setting"),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: const Icon(Icons.logout_rounded),
+                  title: const Text("Sign out"),
+                  onTap: signOut,
+                )
+              ],
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text("Error ${snapshot.error}"),
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
+    );
+  }
+}

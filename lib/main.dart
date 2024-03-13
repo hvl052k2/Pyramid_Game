@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:pyramid_game/firebase_options.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_in/sign_in_screen.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_up/sign_up_screen.dart';
+import 'package:pyramid_game/src/features/core/home_page.dart';
 import 'package:pyramid_game/src/utils/theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,8 +15,32 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final auth = FirebaseAuth.instance;
+  bool isSignedIn = false;
+
+  checkIfSignedIn() async {
+    auth.authStateChanges().listen((User? user) {
+      if (user != null && mounted) {
+        setState(() {
+          isSignedIn = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    checkIfSignedIn();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,19 +50,7 @@ class MyApp extends StatelessWidget {
       // theme: AppTheme.lightTheme,
       // darkTheme: AppTheme.darkTheme,
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const SafeArea(
-      child: SignInScreen(),
-      // child: SignUpScreen(),
+      home: isSignedIn ? const HomePage() : const SignInScreen(),
     );
   }
 }
