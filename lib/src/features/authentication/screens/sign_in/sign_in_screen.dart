@@ -3,6 +3,7 @@ import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/constants/image_strings.dart';
 import 'package:pyramid_game/src/constants/sizes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pyramid_game/src/features/authentication/screens/forgot_password/forgot_password_screen.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_up/sign_up_screen.dart';
 import 'package:pyramid_game/src/features/core/home_page.dart';
 
@@ -249,7 +250,15 @@ class _SignInScreenState extends State<SignInScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const ForgotPasswordScreen(),
+                            ),
+                          );
+                        },
                         child: const Text(
                           'Forgot password ?',
                           style: TextStyle(
@@ -278,8 +287,8 @@ class _SignInScreenState extends State<SignInScreen> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: primaryColor,
-                        backgroundColor: whiteColor,
+                        foregroundColor: whiteColor,
+                        backgroundColor: Colors.redAccent,
                         padding: const EdgeInsets.symmetric(
                           vertical: buttonHeight,
                         ),

@@ -60,12 +60,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         email: email,
         password: password,
       );
-      // .then(
-      //   (value) => {
-      //
-      //     Navigator.pop(context),
-      //   },
-      // );
       FirebaseFirestore.instance
           .collection("Users")
           .doc(credential.user!.email)
@@ -74,7 +68,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         "phoneNumber": "",
         "bio": "Empty bio...",
       });
-
       if (context.mounted) {
         showSnackBar("Sign up successfully", true);
         Navigator.pop(context);
@@ -347,8 +340,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                           : null,
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: primaryColor,
-                        backgroundColor: whiteColor,
+                        foregroundColor: whiteColor,
+                        backgroundColor: Colors.redAccent,
                         padding: const EdgeInsets.symmetric(
                           vertical: buttonHeight,
                         ),

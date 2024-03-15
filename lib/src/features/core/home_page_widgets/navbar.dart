@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/constants/image_strings.dart';
-import 'package:pyramid_game/src/features/authentication/screens/profile_screen/profile_screen.dart';
+import 'package:pyramid_game/src/features/authentication/screens/profile/profile_screen.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_in/sign_in_screen.dart';
 
 class NavBar extends StatefulWidget {
@@ -68,14 +68,22 @@ class _NavBarState extends State<NavBar> {
                 UserAccountsDrawerHeader(
                   accountName: Text(userData["userName"]),
                   accountEmail: Text(auth.currentUser!.email.toString()),
-                  currentAccountPicture: const CircleAvatar(
-                    child: ClipOval(
-                      child: Image(image: AssetImage(avatarImage)),
-                    ),
-                  ),
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage(wallImage), fit: BoxFit.cover),
+                  currentAccountPicture: userData["avatarImage"] != null
+                      ? CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(userData["avatarImage"]),
+                        )
+                      : const CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png"),
+                        ),
+                  decoration: BoxDecoration(
+                    image: userData["wallImage"] != null
+                        ? DecorationImage(
+                            image: NetworkImage(userData["wallImage"]),
+                            fit: BoxFit.cover)
+                        : const DecorationImage(
+                            image: AssetImage(wallImage), fit: BoxFit.cover),
                   ),
                 ),
                 ListTile(
