@@ -48,8 +48,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future updateUser() {
-    CollectionReference users = FirebaseFirestore.instance.collection('Users');
-    return users.doc(auth.currentUser!.email).update({
+    CollectionReference user = FirebaseFirestore.instance.collection('Users');
+    return user.doc(auth.currentUser!.email).update({
       'userName': nameController.text,
       'phoneNumber': phoneController.text,
       'bio': bioController.text,
@@ -341,9 +341,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             userData["avatarImage"]),
                                       )
                                     : CircleAvatar(
+                                        backgroundColor: Colors.grey,
                                         radius: profileHeight / 2,
-                                        backgroundImage: const NetworkImage(
-                                            "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png"),
+                                        backgroundImage:
+                                            const AssetImage(avatarImage),
                                       ),
                             Positioned(
                               right: -20,

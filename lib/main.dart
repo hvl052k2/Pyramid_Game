@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pyramid_game/firebase_options.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_in/sign_in_screen.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_up/sign_up_screen.dart';
-import 'package:pyramid_game/src/features/core/home_page.dart';
+import 'package:pyramid_game/src/features/core/home_screen/home_screen.dart';
 import 'package:pyramid_game/src/utils/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

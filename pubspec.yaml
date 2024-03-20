@@ -40,6 +40,9 @@ dependencies:
   cloud_firestore: ^4.15.8
   image_picker: ^1.0.7
   firebase_storage: ^11.6.9
+  flutter_timer_countdown: ^1.0.7
+  device_preview: ^1.1.0
+  collection: ^1.18.0
 
 dev_dependencies:
   flutter_test:

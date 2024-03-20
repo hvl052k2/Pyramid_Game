@@ -66,16 +66,28 @@ class _NavBarState extends State<NavBar> {
             return ListView(
               children: [
                 UserAccountsDrawerHeader(
-                  accountName: Text(userData["userName"]),
-                  accountEmail: Text(auth.currentUser!.email.toString()),
+                  accountName: Text(
+                    userData["userName"],
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  accountEmail: Text(
+                    auth.currentUser!.email.toString(),
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   currentAccountPicture: userData["avatarImage"] != null
                       ? CircleAvatar(
                           backgroundImage:
                               NetworkImage(userData["avatarImage"]),
                         )
                       : const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png"),
+                          backgroundColor: Colors.grey,
+                          backgroundImage: AssetImage(avatarImage),
                         ),
                   decoration: BoxDecoration(
                     image: userData["wallImage"] != null

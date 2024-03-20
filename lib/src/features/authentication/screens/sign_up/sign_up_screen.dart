@@ -17,6 +17,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formfield = GlobalKey<FormState>();
+  final fullNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -64,7 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           .collection("Users")
           .doc(credential.user!.email)
           .set({
-        "userName": emailController.text.split('@')[0],
+        "userName": fullNameController.text,
         "phoneNumber": "",
         "bio": "Empty bio...",
       });
@@ -101,16 +102,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Navigator.pop(context);
             },
           ),
-          actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.receipt_long,
-                size: 35,
-                color: whiteColor,
-              ),
-              onPressed: () {},
-            ),
-          ],
           backgroundColor: primaryColor,
         ),
         backgroundColor: primaryColor,
@@ -118,7 +109,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           children: [
             Image(
               image: const AssetImage(signUpLogo),
-              height: size.height * 0.3,
+              height: size.height * 0.25,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -161,6 +152,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     key: _formfield,
                     child: Column(
                       children: [
+                        TextFormField(
+                          controller: fullNameController,
+                          style: const TextStyle(color: whiteColor),
+                          decoration: const InputDecoration(
+                            hintText: 'Full name',
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                              fontFamily: 'EBGaramond',
+                              fontSize: 18,
+                            ),
+                            prefixIcon: Icon(Icons.person_2_outlined),
+                            prefixIconColor: whiteColor,
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(40.0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: whiteColor),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50),
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Enter your full name.";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 10),
                         TextFormField(
                           controller: emailController,
                           style: const TextStyle(color: whiteColor),
@@ -258,7 +280,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           obscureText: obscured,
                           keyboardType: TextInputType.visiblePassword,
                           decoration: InputDecoration(
-                            hintText: 'Confirm p assword',
+                            hintText: 'Confirm password',
                             hintStyle: const TextStyle(
                               color: Colors.grey,
                               fontFamily: 'EBGaramond',
@@ -289,7 +311,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return "Please re-enter your password.";
+                              return "Please Re-enter your password.";
                             }
                             if (passwordController.text !=
                                 confirmPasswordController.text) {
@@ -340,6 +362,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                           : null,
                       style: ElevatedButton.styleFrom(
+                        disabledBackgroundColor: Colors.grey,
+                        disabledForegroundColor: whiteColor,
                         foregroundColor: whiteColor,
                         backgroundColor: Colors.redAccent,
                         padding: const EdgeInsets.symmetric(
@@ -370,12 +394,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SignInScreen(),
-                            ),
-                          );
+                          Navigator.pop(context);
                         },
                         child: const Text(
                           'Sign in',

@@ -35,10 +35,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   showInforDialog(
                       context,
                       "Reset password link has been sent to your registered email address.",
-                      true),
+                      true)
                 }
             },
           );
+      emailController.clear();
     } else {
       if (context.mounted) {
         showInforDialog(context, "Email does not exist", false);
@@ -54,10 +55,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          "Information",
+          isBool ? "Successfully" : "Fail",
           style: TextStyle(
-              fontWeight: FontWeight.w700,
-              color: isBool ? Colors.green : Colors.red),
+            fontWeight: FontWeight.w700,
+            color: isBool ? Colors.green : Colors.red,
+          ),
           textAlign: TextAlign.center,
         ),
         content: Text(
@@ -216,7 +218,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 color: primaryColor,
                               )
                             : const Text(
-                                'SUBMIT',
+                                'RESET PASSWORD',
                                 style: TextStyle(
                                   fontFamily: 'EBGaramond',
                                   fontWeight: FontWeight.w700,

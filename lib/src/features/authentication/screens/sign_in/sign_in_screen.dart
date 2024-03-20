@@ -5,7 +5,7 @@ import 'package:pyramid_game/src/constants/sizes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pyramid_game/src/features/authentication/screens/forgot_password/forgot_password_screen.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_up/sign_up_screen.dart';
-import 'package:pyramid_game/src/features/core/home_page.dart';
+import 'package:pyramid_game/src/features/core/home_screen/home_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({
@@ -21,6 +21,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  bool isLoading = false;
 
   bool obscured = false;
 
@@ -67,8 +68,14 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 )
               });
+      setState(() {
+        isLoading = false;
+      });
     } on FirebaseAuthException catch (e) {
       showSnackBar("Account or password is incorrect", false);
+      setState(() {
+        isLoading = false;
+      });
       // if (e.code == "user-not-found") {
       //   print('user not found');
       //   showSnackBar("No user found for that email.", false);
@@ -166,13 +173,14 @@ class _SignInScreenState extends State<SignInScreen> {
                             prefixIcon: Icon(Icons.email_outlined),
                             prefixIconColor: whiteColor,
                             border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(40.0)),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(40.0),
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: whiteColor),
                               borderRadius: BorderRadius.all(
-                                Radius.circular(50),
+                                Radius.circular(40),
                               ),
                             ),
                           ),
@@ -220,7 +228,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: whiteColor),
                               borderRadius: BorderRadius.all(
-                                Radius.circular(50),
+                                Radius.circular(40),
                               ),
                             ),
                           ),
@@ -278,12 +286,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (_formfield.currentState!.validate()) {
+                          setState(() {
+                            isLoading = true;
+                          });
                           signIn(
                             emailController.text.toString(),
                             passwordController.text.toString(),
                           );
-                          // emailController.clear();
-                          // passwordController.clear();
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -293,14 +302,19 @@ class _SignInScreenState extends State<SignInScreen> {
                           vertical: buttonHeight,
                         ),
                       ),
-                      child: const Text(
-                        'SIGN IN',
-                        style: TextStyle(
-                          fontFamily: 'EBGaramond',
-                          fontWeight: FontWeight.w700,
-                          fontSize: 20,
-                        ),
-                      ),
+                      child: isLoading
+                          ? const CircularProgressIndicator(
+                              backgroundColor: primaryColor,
+                              color: whiteColor,
+                            )
+                          : const Text(
+                              'SIGN IN',
+                              style: TextStyle(
+                                fontFamily: 'EBGaramond',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                              ),
+                            ),
                     ),
                   ),
                   const SizedBox(height: 10),
