@@ -11,6 +11,8 @@ import 'package:pyramid_game/src/features/core/home_screen/home_screen.dart';
 import 'package:pyramid_game/src/features/core/result_screen/result_screen.dart';
 import 'package:pyramid_game/src/features/core/room_screen/room_widgets/vote_form_widget.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
+import 'package:timer_count_down/timer_controller.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 
 class RoomScreen extends StatefulWidget {
   const RoomScreen({super.key, required this.roomId, required this.title});
@@ -34,16 +36,46 @@ class _RoomScreenState extends State<RoomScreen> {
       userVoted4 = "",
       userVoted5 = "";
 
+  final CountdownController timerController =
+      CountdownController(autoStart: true);
+
   Future updateSwitch(value) {
     CollectionReference room = FirebaseFirestore.instance.collection('Rooms');
     return room.doc(widget.roomId).update({"status": value});
   }
 
-  void startCountdown() {
+  // Future updateStartVoting(bool value) {
+  //   CollectionReference room = FirebaseFirestore.instance.collection('Rooms');
+  //   return room.doc(widget.roomId).update({"isStart": value});
+  // }
+
+  Future updateResult(List<Map<String, dynamic>> result) async {
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final docSnapshot = await transaction.get(
+            FirebaseFirestore.instance.collection("Rooms").doc(widget.roomId));
+
+        if (!docSnapshot.exists) {
+          throw Exception("Room does not exist");
+        }
+
+        List resultFirebase = List.from(docSnapshot.data()!["result"]);
+        resultFirebase.addAll(result);
+        // print("update result Firebase: $resultFirebase");
+
+        transaction.update(docSnapshot.reference, {"result": resultFirebase});
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void startVoting() {
     setState(() {
       isCountdown = true;
     });
     updateSwitch(false);
+    // updateStartVoting(true);
   }
 
   void checkAdmin() async {
@@ -212,10 +244,16 @@ class _RoomScreenState extends State<RoomScreen> {
     return isVoteForYourSelf;
   }
 
-  void countVoted(List<Map<String, dynamic>> votedList) {
+  Future countVoted() async {
+    DocumentSnapshot<Map<String, dynamic>> docSnapshot = await FirebaseFirestore
+        .instance
+        .collection("Rooms")
+        .doc(widget.roomId)
+        .get();
+    List resultFirebase = docSnapshot["result"];
     Map<String, Map<String, dynamic>> countMap = {};
 
-    for (var item in votedList) {
+    for (var item in resultFirebase) {
       String key = item['gmail'];
       if (countMap.containsKey(key)) {
         countMap[key]?['count'] += 1;
@@ -238,14 +276,17 @@ class _RoomScreenState extends State<RoomScreen> {
       isLoading = false;
     });
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => ResultScreen(
-          rankLists: rankLists,
+    if (context.mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => ResultScreen(
+            rankLists: rankLists,
+            roomId: widget.roomId,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   List<Map<String, dynamic>> sortCountVotedMap(
@@ -273,10 +314,11 @@ class _RoomScreenState extends State<RoomScreen> {
     List<Map<String, dynamic>> f =
         sortedResult.sublist(a.length + b.length + c.length + d.length);
     rankLists.add(f);
+
     return rankLists;
   }
 
-  void submit() {
+  void submit() async {
     if (userVoted1 != "" &&
         userVoted2 != "" &&
         userVoted3 != "" &&
@@ -300,6 +342,7 @@ class _RoomScreenState extends State<RoomScreen> {
             ..add(outputMap3)
             ..add(outputMap4)
             ..add(outputMap5);
+          await updateResult(result);
         } else {
           showInforDialog(context, "You can not vote for yourself");
         }
@@ -312,18 +355,22 @@ class _RoomScreenState extends State<RoomScreen> {
   }
 
   void leaveRoom() async {
-    final docSnapshot = await FirebaseFirestore.instance
-        .collection("Rooms")
-        .doc(widget.roomId)
-        .get();
-    if (docSnapshot.exists) {
-      List attenderList = docSnapshot["attenders"];
-      attenderList.removeWhere(
-          (item) => item["attenderGmail"] == auth!.email.toString());
-      await FirebaseFirestore.instance
-          .collection("Rooms")
-          .doc(widget.roomId)
-          .update({"attenders": attenderList});
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final docSnapshot = await transaction.get(
+            FirebaseFirestore.instance.collection("Rooms").doc(widget.roomId));
+
+        if (!docSnapshot.exists) {
+          throw Exception("Room does not exist");
+        }
+
+        List attenders = List.from(docSnapshot.data()!["attenders"]);
+        attenders.removeWhere(
+            (item) => item["attenderGmail"] == auth!.email.toString());
+
+        transaction.update(docSnapshot.reference, {"attenders": attenders});
+      });
+
       if (context.mounted) {
         Navigator.pushReplacement(
           context,
@@ -332,6 +379,8 @@ class _RoomScreenState extends State<RoomScreen> {
           ),
         );
       }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -422,7 +471,7 @@ class _RoomScreenState extends State<RoomScreen> {
             actions: [
               isAdmin
                   ? ElevatedButton(
-                      onPressed: isCountdown ? null : startCountdown,
+                      onPressed: isCountdown ? null : startVoting,
                       style: ElevatedButton.styleFrom(
                         disabledBackgroundColor: Colors.grey,
                         disabledForegroundColor: primaryColor,
@@ -596,7 +645,7 @@ class _RoomScreenState extends State<RoomScreen> {
                                             endTime: DateTime.now().add(
                                               const Duration(
                                                 minutes: 0,
-                                                seconds: 10,
+                                                seconds: 20,
                                               ),
                                             ),
                                             timeTextStyle: const TextStyle(
@@ -604,11 +653,11 @@ class _RoomScreenState extends State<RoomScreen> {
                                             colonsTextStyle: const TextStyle(
                                                 color: whiteColor),
                                             onEnd: () {
-                                              countVoted(result);
+                                              countVoted();
                                             },
                                           )
                                         : const Text(
-                                            "00  :  10",
+                                            "00  :  20",
                                             style: TextStyle(color: whiteColor),
                                           ),
                                     const SizedBox(width: 10),

@@ -93,43 +93,54 @@ class _HomePageState extends State<HomePage> {
     bool isPasswordValid = await checkPassword();
     bool isRoomStatusValid = await checkRoomStatus();
 
-    if (isRoomCodeValid) {
-      final attenderList = await getAttenderList(roomId);
-      if (isPasswordValid) {
-        if (isRoomStatusValid) {
-          attenderList.add({
+    if (isRoomCodeValid && isPasswordValid && isRoomStatusValid) {
+      try {
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
+          final docSnapshot = await transaction
+              .get(FirebaseFirestore.instance.collection("Rooms").doc(roomId));
+
+          if (!docSnapshot.exists) {
+            throw Exception("Room does not exist");
+          }
+
+          List attenders = List.from(docSnapshot.data()!["attenders"]);
+          attenders.add({
             "attenderGmail": auth?.email,
             "attenderName": userName,
           });
-          await FirebaseFirestore.instance
-              .collection("Rooms")
-              .doc(roomId)
-              .update({"attenders": attenderList});
-          if (context.mounted) {
-            Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => RoomScreen(
-                  roomId: roomId,
-                  title: titleController.text,
-                ),
-              ),
-            );
-          }
 
-          roomCodeConTroller.clear();
-          titleController.clear();
-          passwordController.clear();
-        } else {
-          return "The room was closed";
+          transaction.update(docSnapshot.reference, {"attenders": attenders});
+        });
+
+        if (context.mounted) {
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => RoomScreen(
+                roomId: roomId,
+                title: titleController.text,
+              ),
+            ),
+          );
         }
-      } else {
-        return "Incorrect password, try again";
+
+        roomCodeConTroller.clear();
+        titleController.clear();
+        passwordController.clear();
+      } catch (e) {
+        return e.toString();
       }
     } else {
-      return "Room code does not exist";
+      if (!isRoomCodeValid) {
+        return "Room code does not exist";
+      } else if (!isPasswordValid) {
+        return "Incorrect password, try again";
+      } else {
+        return "The room was closed";
+      }
     }
+
     return "";
   }
 

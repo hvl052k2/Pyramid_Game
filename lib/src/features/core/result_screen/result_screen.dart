@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/features/core/result_screen/result_screen_widgets/custom_progress_bar.dart';
 
 class ResultScreen extends StatefulWidget {
-  const ResultScreen({super.key, required this.rankLists});
+  const ResultScreen(
+      {super.key, required this.rankLists, required this.roomId});
   final List<List<Map<String, dynamic>>> rankLists;
+  final String roomId;
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
@@ -12,10 +15,27 @@ class ResultScreen extends StatefulWidget {
 
 class _ResultScreenState extends State<ResultScreen> {
   final rank = ["A", "B", "C", "D", "F"];
+
+  void updateRankLists(List rankLists) async {
+    var myMap = {};
+    for (var i = 0; i < rank.length; i++) {
+      myMap[rank[i]] = rankLists[i];
+    }
+    CollectionReference room = FirebaseFirestore.instance.collection('Rooms');
+    return room.doc(widget.roomId).update({"rankLists": myMap});
+  }
+
+  @override
+  void initState() {
+    updateRankLists(widget.rankLists);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     // final double sumVote =
     //     widget.result.length.toDouble() * (widget.result.length.toDouble() - 1);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: primaryColor,
