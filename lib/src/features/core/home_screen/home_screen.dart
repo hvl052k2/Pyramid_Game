@@ -105,8 +105,8 @@ class _HomePageState extends State<HomePage> {
 
           List attenders = List.from(docSnapshot.data()!["attenders"]);
           attenders.add({
-            "attenderGmail": auth?.email,
-            "attenderName": userName,
+            "gmail": auth?.email,
+            "name": userName,
           });
 
           transaction.update(docSnapshot.reference, {"attenders": attenders});
@@ -165,13 +165,16 @@ class _HomePageState extends State<HomePage> {
         {
           "admin": auth?.email,
           "attenders": [
-            {"attenderGmail": auth?.email, "attenderName": userName}
+            {"gmail": auth?.email, "name": userName}
           ],
           "createdAt": DateTime.now(),
           "password": passwordController.text.toString().trim(),
+          "rankListsMap": {},
           "result": [],
           "status": true,
+          "isCountdown": false,
           "title": titleController.text.toString(),
+          "submitterList": [],
         },
       );
 
