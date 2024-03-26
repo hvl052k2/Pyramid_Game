@@ -114,7 +114,7 @@ class _HomePageState extends State<HomePage> {
 
         if (context.mounted) {
           Navigator.pop(context);
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (BuildContext context) => RoomScreen(

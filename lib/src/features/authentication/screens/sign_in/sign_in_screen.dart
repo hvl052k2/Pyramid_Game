@@ -55,22 +55,74 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       );
 
+  void showInforDialog(BuildContext context, String content) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          "Information",
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            color: Colors.red,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        content: Text(
+          content,
+          textAlign: TextAlign.center,
+        ),
+        actions: [
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              ),
+              child: const Text(
+                'Ok',
+                style: TextStyle(color: whiteColor),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void signIn(String email, String password) async {
     try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) => {
-                showSnackBar("Sign in successfully", true),
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const HomePage(),
-                  ),
-                )
-              });
-      setState(() {
-        isLoading = false;
-      });
+      UserCredential credential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+
+      if (credential.user!.emailVerified) {
+        setState(() {
+          isLoading = false;
+        });
+        showSnackBar("Sign in successfully", true);
+        if (context.mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => const HomePage(),
+            ),
+          );
+        }
+      } else {
+        if (context.mounted) {
+          setState(() {
+            isLoading = false;
+          });
+          showInforDialog(context,
+              "Your email is not authenticated, please check your verification email before logging in.");
+        }
+      }
     } on FirebaseAuthException catch (e) {
       showSnackBar("Account or password is incorrect", false);
       setState(() {

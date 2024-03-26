@@ -50,7 +50,9 @@ class _MyAppState extends State<MyApp> {
       // theme: AppTheme.lightTheme,
       // darkTheme: AppTheme.darkTheme,
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: isSignedIn ? const HomePage() : const SignInScreen(),
+      home: (isSignedIn && auth.currentUser!.emailVerified)
+          ? const HomePage()
+          : const SignInScreen(),
     );
   }
 }

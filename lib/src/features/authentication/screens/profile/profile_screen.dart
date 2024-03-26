@@ -26,6 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Uint8List? _avatarImage, _wallImage;
   File? selectedAvatarImage, selectedWallImage;
   String? avatarImageUrl, wallImageUrl;
+  bool isLoading = false;
 
   Future uploadImageToFirebase() async {
     String fileName = DateTime.now().microsecondsSinceEpoch.toString();
@@ -36,6 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await avatarRef.putFile(selectedAvatarImage!);
       avatarImageUrl = await avatarRef.getDownloadURL();
       selectedAvatarImage = null;
+      _avatarImage = null;
     }
 
     // wall image
@@ -44,6 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await wallRef.putFile(selectedWallImage!);
       wallImageUrl = await wallRef.getDownloadURL();
       selectedWallImage = null;
+      _wallImage = null;
     }
   }
 
@@ -57,12 +60,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       'wallImage': wallImageUrl,
     }).then((value) {
       showSnackBar("Update sucessfully", true);
+      setState(() {
+        isLoading = false;
+      });
       Navigator.pop(context);
     });
   }
 
   void showUpdateDialog(BuildContext context) {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) => AlertDialog(
         title: const Text(
@@ -75,43 +82,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
           textAlign: TextAlign.center,
         ),
         actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: OutlinedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  padding: const EdgeInsets.all(10.0),
-                ),
-                child: const Text(
-                  'Cancle',
-                  style: TextStyle(color: primaryColor),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  await uploadImageToFirebase();
-                  updateUser();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  padding: const EdgeInsets.all(10.0),
-                ),
-                child: const Text(
-                  'Ok',
-                  style: TextStyle(color: whiteColor),
-                ),
-              ),
-            ],
-          )
+          StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: whiteColor,
+                      color: primaryColor,
+                    ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          padding: const EdgeInsets.all(10.0),
+                        ),
+                        child: const Text(
+                          'Cancle',
+                          style: TextStyle(color: primaryColor),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          await uploadImageToFirebase();
+                          updateUser();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          padding: const EdgeInsets.all(10.0),
+                        ),
+                        child: const Text(
+                          'Ok',
+                          style: TextStyle(color: whiteColor),
+                        ),
+                      ),
+                    ],
+                  );
+          })
         ],
       ),
     );
@@ -341,7 +361,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             userData["avatarImage"]),
                                       )
                                     : CircleAvatar(
-                                        backgroundColor: Colors.grey,
+                                        // backgroundColor: Colors.grey,
                                         radius: profileHeight / 2,
                                         backgroundImage:
                                             const AssetImage(avatarImage),

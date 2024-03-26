@@ -22,6 +22,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   bool obscured = false;
+  bool isLoading = false;
 
   void toggleObscured() {
     setState(() {
@@ -54,6 +55,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       );
 
+  void showInforDialog(BuildContext context, String content) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          "Information",
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            color: Colors.red,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        content: Text(
+          content,
+          textAlign: TextAlign.center,
+        ),
+        actions: [
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              ),
+              child: const Text(
+                'Ok',
+                style: TextStyle(color: whiteColor),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void signUp(String email, String password) async {
     try {
       UserCredential credential =
@@ -69,9 +112,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         "phoneNumber": "",
         "bio": "Empty bio...",
       });
+      setState(() {
+        isLoading = false;
+      });
       if (context.mounted) {
-        showSnackBar("Sign up successfully", true);
-        Navigator.pop(context);
+        // showSnackBar("Sign up successfully", true);
+        FirebaseAuth.instance.currentUser!.sendEmailVerification();
+        showInforDialog(context,
+            "Sign up successfully!\nPlease, check your email to verify account");
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == "weak-password") {
@@ -353,6 +401,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       onPressed: isChecked!
                           ? () {
                               if (_formfield.currentState!.validate()) {
+                                setState(() {
+                                  isLoading = true;
+                                });
                                 signUp(
                                   emailController.text.toString(),
                                   passwordController.text.toString(),
@@ -370,14 +421,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           vertical: buttonHeight,
                         ),
                       ),
-                      child: const Text(
-                        'SIGN UP',
-                        style: TextStyle(
-                          fontFamily: 'EBGaramond',
-                          fontWeight: FontWeight.w700,
-                          fontSize: 20,
-                        ),
-                      ),
+                      child: isLoading
+                          ? const CircularProgressIndicator(
+                              backgroundColor: primaryColor,
+                              color: whiteColor,
+                            )
+                          : const Text(
+                              'SIGN UP',
+                              style: TextStyle(
+                                fontFamily: 'EBGaramond',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                              ),
+                            ),
                     ),
                   ),
                   const SizedBox(height: 10),
