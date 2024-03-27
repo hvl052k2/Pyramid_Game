@@ -5,8 +5,9 @@ import 'package:pyramid_game/src/features/core/home_screen/home_screen.dart';
 import 'package:pyramid_game/src/features/core/result_screen/result_screen_widgets/custom_progress_bar.dart';
 
 class ResultScreen extends StatefulWidget {
-  const ResultScreen({super.key, required this.roomId});
+  const ResultScreen({super.key, required this.roomId, required this.type});
   final String roomId;
+  final String type;
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
@@ -22,7 +23,8 @@ class _ResultScreenState extends State<ResultScreen> {
         title: Text(
           titleText,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontWeight: FontWeight.w700),
+          style:
+              const TextStyle(fontWeight: FontWeight.w700, color: Colors.red),
         ),
         content: Text(
           contentText,
@@ -75,6 +77,46 @@ class _ResultScreenState extends State<ResultScreen> {
     );
   }
 
+  void saveHistory() async {
+    DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
+        .collection("Rooms")
+        .doc(widget.roomId)
+        .get();
+    List attendersFirebase = docSnapshot["attenders"];
+    Map rankListsMapFirebase = docSnapshot["rankListsMap"];
+    String titleFirebase = docSnapshot["title"];
+    for (var item in attendersFirebase) {
+      print("=================== Saving history ====================");
+      final userData = await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(item["gmail"])
+          .get();
+      if (userData.exists) {
+        await FirebaseFirestore.instance
+            .collection("Users")
+            .doc(item["gmail"])
+            .collection("History")
+            .doc(widget.roomId)
+            .set({
+          "createdAt": DateTime.now(),
+          "numberOfPlayers": attendersFirebase.length,
+          "rankListsMap": rankListsMapFirebase,
+          "title": titleFirebase
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    if (widget.type == "stream") {
+      saveHistory();
+    } else {
+      return;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -83,8 +125,9 @@ class _ResultScreenState extends State<ResultScreen> {
         child: Scaffold(
           backgroundColor: primaryColor,
           appBar: AppBar(
-            shape:
-                const Border(bottom: BorderSide(color: whiteColor, width: 1)),
+            shape: const Border(
+              bottom: BorderSide(color: whiteColor, width: 1),
+            ),
             title: const Text(
               "RESULT",
               style: TextStyle(
@@ -97,22 +140,35 @@ class _ResultScreenState extends State<ResultScreen> {
             ),
             centerTitle: true,
             backgroundColor: primaryColor,
-            leading: Container(),
+            leading: widget.type == "watchHistory"
+                ? IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_rounded,
+                      size: 35,
+                      color: whiteColor,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                : Container(),
             actions: [
-              IconButton(
-                icon: const Icon(
-                  Icons.logout_outlined,
-                  size: 35,
-                  color: whiteColor,
-                ),
-                onPressed: () {
-                  showExitDialog(
-                    context,
-                    "Information",
-                    "Do you want to exit?",
-                  );
-                },
-              ),
+              widget.type == "stream"
+                  ? IconButton(
+                      icon: const Icon(
+                        Icons.logout_outlined,
+                        size: 35,
+                        color: whiteColor,
+                      ),
+                      onPressed: () {
+                        showExitDialog(
+                          context,
+                          "Information",
+                          "Do you want to exit?",
+                        );
+                      },
+                    )
+                  : Container(),
             ],
           ),
           body: StreamBuilder<DocumentSnapshot>(
@@ -125,9 +181,11 @@ class _ResultScreenState extends State<ResultScreen> {
                 final roomData = snapshot.data!.data() as Map<String, dynamic>;
                 return ListView.builder(
                   padding: const EdgeInsets.all(10),
-                  itemCount: roomData["rankListsMap"].keys.length,
+                  itemCount: Map.from(roomData["rankListsMap"]).keys.length,
                   itemBuilder: (context, index) {
-                    String key = roomData["rankListsMap"].keys.elementAt(index);
+                    String key = Map.from(roomData["rankListsMap"])
+                        .keys
+                        .elementAt(index);
                     return Container(
                       height: List.from(roomData["rankListsMap"][key])
                               .isNotEmpty

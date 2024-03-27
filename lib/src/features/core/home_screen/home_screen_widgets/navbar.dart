@@ -5,6 +5,7 @@ import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/constants/image_strings.dart';
 import 'package:pyramid_game/src/features/authentication/screens/profile/profile_screen.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_in/sign_in_screen.dart';
+import 'package:pyramid_game/src/features/core/history_screen/history_screen.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
@@ -55,6 +56,7 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: whiteColor,
       child: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
             .collection("Users")
@@ -118,7 +120,14 @@ class _NavBarState extends State<NavBar> {
                     ListTile(
                       leading: const Icon(Icons.settings_backup_restore),
                       title: const Text("History"),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => HistoryScreen(),
+                          ),
+                        );
+                      },
                     ),
                     ListTile(
                       leading: const Icon(Icons.settings),

@@ -44,6 +44,8 @@ dependencies:
   device_preview: ^1.1.0
   collection: ^1.18.0
   timer_count_down: ^2.2.2
+  intl: ^0.18.1
+  flutter_native_splash: ^2.3.10
 
 dev_dependencies:
   flutter_test:

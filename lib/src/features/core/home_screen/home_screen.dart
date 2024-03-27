@@ -140,7 +140,6 @@ class _HomePageState extends State<HomePage> {
         return "The room was closed";
       }
     }
-
     return "";
   }
 

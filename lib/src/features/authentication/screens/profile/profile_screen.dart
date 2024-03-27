@@ -329,22 +329,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                         ),
                       ),
-                      Positioned(
-                        right: -20,
-                        bottom: profileHeight / 2,
-                        child: MaterialButton(
-                          onPressed: () {
-                            showImagePickerOption(context, "wallImage");
-                          },
-                          color: whiteColor,
-                          padding: const EdgeInsets.all(8),
-                          shape: const CircleBorder(),
-                          child: const Icon(
-                            Icons.camera_alt,
-                            size: 25,
-                          ),
-                        ),
-                      ),
+                      // Positioned(
+                      //   right: -20,
+                      //   bottom: profileHeight / 2,
+                      //   child: MaterialButton(
+                      //     onPressed: () {
+                      //       showImagePickerOption(context, "wallImage");
+                      //     },
+                      //     color: whiteColor,
+                      //     padding: const EdgeInsets.all(8),
+                      //     shape: const CircleBorder(),
+                      //     child: const Icon(
+                      //       Icons.camera_alt,
+                      //       size: 25,
+                      //     ),
+                      //   ),
+                      // ),
                       Positioned(
                         top: coverHeight - profileHeight / 2,
                         child: Stack(
@@ -361,27 +361,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             userData["avatarImage"]),
                                       )
                                     : CircleAvatar(
-                                        // backgroundColor: Colors.grey,
+                                        backgroundColor: Colors.grey,
                                         radius: profileHeight / 2,
                                         backgroundImage:
                                             const AssetImage(avatarImage),
                                       ),
-                            Positioned(
-                              right: -20,
-                              bottom: 0,
-                              child: MaterialButton(
-                                onPressed: () {
-                                  showImagePickerOption(context, "avatarImage");
-                                },
-                                color: whiteColor,
-                                padding: const EdgeInsets.all(8),
-                                shape: const CircleBorder(),
-                                child: const Icon(
-                                  Icons.camera_alt,
-                                  size: 25,
-                                ),
-                              ),
-                            )
+                            // Positioned(
+                            //   right: -20,
+                            //   bottom: 0,
+                            //   child: MaterialButton(
+                            //     onPressed: () {
+                            //       showImagePickerOption(context, "avatarImage");
+                            //     },
+                            //     color: whiteColor,
+                            //     padding: const EdgeInsets.all(8),
+                            //     shape: const CircleBorder(),
+                            //     child: const Icon(
+                            //       Icons.camera_alt,
+                            //       size: 25,
+                            //     ),
+                            //   ),
+                            // )
                           ],
                         ),
                       ),

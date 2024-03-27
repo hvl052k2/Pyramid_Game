@@ -259,6 +259,7 @@ class _RoomScreenState extends State<RoomScreen> {
         MaterialPageRoute(
           builder: (BuildContext context) => ResultScreen(
             roomId: widget.roomId,
+            type: "stream",
           ),
         ),
       );
