@@ -47,7 +47,7 @@ class _NavBarState extends State<NavBar> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => const SignInScreen(),
+              builder: (BuildContext context) => SignInScreen(),
             ),
           )
         });

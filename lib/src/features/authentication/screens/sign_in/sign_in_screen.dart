@@ -1,141 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pyramid_game/src/common_widgets/custom_elevated_button.dart';
+import 'package:pyramid_game/src/common_widgets/custom_text_form_field.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/constants/image_strings.dart';
 import 'package:pyramid_game/src/constants/sizes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pyramid_game/src/features/authentication/controllers/sign_in_controller.dart';
 import 'package:pyramid_game/src/features/authentication/screens/forgot_password/forgot_password_screen.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_up/sign_up_screen.dart';
 import 'package:pyramid_game/src/features/core/home_screen/home_screen.dart';
 
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({
+class SignInScreen extends StatelessWidget {
+  SignInScreen({
     super.key,
   });
 
-  @override
-  State<SignInScreen> createState() => _SignInScreenState();
-}
-
-class _SignInScreenState extends State<SignInScreen> {
-  final _formfield = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  bool isLoading = false;
-
-  bool obscured = false;
-
-  void toggleObscured() {
-    setState(() {
-      obscured = !obscured;
-    });
-  }
-
-  void showSnackBar(String message, bool status) =>
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(children: [
-            Icon(
-              status ? Icons.done_rounded : Icons.info_rounded,
-              color: whiteColor,
-              size: 30,
-            ),
-            const SizedBox(width: 10),
-            Text(
-              message,
-              style: const TextStyle(
-                fontSize: 18,
-                color: whiteColor,
-                fontFamily: 'EBGaramond',
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ]),
-          backgroundColor: status ? Colors.green : Colors.red,
-        ),
-      );
-
-  void showInforDialog(BuildContext context, String content) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(
-          "Information",
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            color: Colors.red,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        content: Text(
-          content,
-          textAlign: TextAlign.center,
-        ),
-        actions: [
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              ),
-              child: const Text(
-                'Ok',
-                style: TextStyle(color: whiteColor),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void signIn(String email, String password) async {
-    try {
-      UserCredential credential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-
-      if (credential.user!.emailVerified) {
-        setState(() {
-          isLoading = false;
-        });
-        showSnackBar("Sign in successfully", true);
-        if (context.mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => const HomePage(),
-            ),
-          );
-        }
-      } else {
-        if (context.mounted) {
-          setState(() {
-            isLoading = false;
-          });
-          showInforDialog(context,
-              "Your email is not authenticated, please check your verification email before logging in.");
-        }
-      }
-    } on FirebaseAuthException catch (e) {
-      showSnackBar("Account or password is incorrect", false);
-      setState(() {
-        isLoading = false;
-      });
-      // if (e.code == "user-not-found") {
-      //   print('user not found');
-      //   showSnackBar("No user found for that email.", false);
-      // } else if (e.code == "wrong-password") {
-      //   showSnackBar("Wrong password provided for that user.", false);
-      // }
-    }
-  }
+  final signInController = Get.put(SignInController());
 
   @override
   Widget build(BuildContext context) {
@@ -208,34 +89,13 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   const SizedBox(height: 20),
                   Form(
-                    key: _formfield,
+                    key: signInController.formfield,
                     child: Column(
                       children: [
-                        TextFormField(
-                          controller: emailController,
-                          style: const TextStyle(color: whiteColor),
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            hintText: 'Email',
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                              fontFamily: 'EBGaramond',
-                              fontSize: 18,
-                            ),
-                            prefixIcon: Icon(Icons.email_outlined),
-                            prefixIconColor: whiteColor,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(40.0),
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: whiteColor),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(40),
-                              ),
-                            ),
-                          ),
+                        CustomTextFormField(
+                          textController: signInController.email,
+                          hintText: "Email",
+                          prefixIcon: Icons.email_outlined,
                           validator: (value) {
                             bool emailValid = RegExp(
                                     r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
@@ -250,57 +110,39 @@ class _SignInScreenState extends State<SignInScreen> {
                           },
                         ),
                         const SizedBox(height: 10),
-                        TextFormField(
-                          controller: passwordController,
-                          style: const TextStyle(color: whiteColor),
-                          obscureText: obscured,
-                          keyboardType: TextInputType.visiblePassword,
-                          decoration: InputDecoration(
-                            hintText: 'Password',
-                            hintStyle: const TextStyle(
-                              color: Colors.grey,
-                              fontFamily: 'EBGaramond',
-                              fontSize: 18,
-                            ),
-                            prefixIcon: const Icon(Icons.lock_outline),
-                            prefixIconColor: whiteColor,
+                        Obx(
+                          () => CustomTextFormField(
+                            obscured: signInController.obscured.value,
+                            textController: signInController.password,
+                            hintText: "Password",
+                            prefixIcon: Icons.lock_outline,
                             suffixIcon: IconButton(
                               icon: Icon(
-                                obscured
+                                signInController.obscured.value
                                     ? Icons.visibility_rounded
                                     : Icons.visibility_off_rounded,
                               ),
-                              onPressed: toggleObscured,
+                              onPressed: signInController.toggleObscured,
                             ),
-                            suffixIconColor: whiteColor,
-                            border: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(40.0)),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: whiteColor),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(40),
-                              ),
-                            ),
+                            validator: (value) {
+                              bool passwordValid = RegExp(
+                                      r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$")
+                                  .hasMatch(value!);
+                              if (value.isEmpty) {
+                                return "Enter password.";
+                              } else if (signInController.password.text.length <
+                                  8) {
+                                return "Password length should not be lass than 8 characters.";
+                              }
+                              if (!passwordValid) {
+                                return [
+                                  "Password should contain at least one upper case,",
+                                  "one lower case, one digit, and one special character."
+                                ].join("\n");
+                              }
+                              return null;
+                            },
                           ),
-                          validator: (value) {
-                            bool passwordValid = RegExp(
-                                    r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$")
-                                .hasMatch(value!);
-                            if (value.isEmpty) {
-                              return "Enter password.";
-                            } else if (passwordController.text.length < 8) {
-                              return "Password length should not be lass than 8 characters.";
-                            }
-                            if (!passwordValid) {
-                              return [
-                                "Password should contain at least one upper case,",
-                                "one lower case, one digit, and one special character."
-                              ].join("\n");
-                            }
-                            return null;
-                          },
                         ),
                       ],
                     ),
@@ -311,13 +153,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const ForgotPasswordScreen(),
-                            ),
-                          );
+                          Get.to(() => ForgotPasswordScreen());
                         },
                         child: const Text(
                           'Forgot password ?',
@@ -335,38 +171,21 @@ class _SignInScreenState extends State<SignInScreen> {
                   const SizedBox(height: 10),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formfield.currentState!.validate()) {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          signIn(
-                            emailController.text.toString(),
-                            passwordController.text.toString(),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: whiteColor,
-                        backgroundColor: Colors.redAccent,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: buttonHeight,
-                        ),
+                    child: Obx(
+                      () => CustomElevatedButton(
+                        onPressed: () {
+                          if (signInController.formfield.currentState!
+                              .validate()) {
+                            signInController.toggleIsLoading(true);
+                            signInController.signIn(
+                              signInController.email.text.toString(),
+                              signInController.password.text.toString(),
+                            );
+                          }
+                        },
+                        isLoading: signInController.isLoading.value,
+                        textContent: "SIGN IN",
                       ),
-                      child: isLoading
-                          ? const CircularProgressIndicator(
-                              backgroundColor: primaryColor,
-                              color: whiteColor,
-                            )
-                          : const Text(
-                              'SIGN IN',
-                              style: TextStyle(
-                                fontFamily: 'EBGaramond',
-                                fontWeight: FontWeight.w700,
-                                fontSize: 20,
-                              ),
-                            ),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -383,12 +202,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SignUpScreen(),
-                            ),
-                          );
+                          Get.to(() => SignUpScreen());
                         },
                         child: const Text(
                           'Sign up',

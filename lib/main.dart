@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pyramid_game/firebase_options.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_in/sign_in_screen.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_up/sign_up_screen.dart';
@@ -44,15 +45,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      // themeMode: ThemeMode.system,
-      // theme: AppTheme.lightTheme,
-      // darkTheme: AppTheme.darkTheme,
       theme: ThemeData(primarySwatch: Colors.blue),
       home: (isSignedIn && auth.currentUser!.emailVerified)
           ? const HomePage()
-          : const SignInScreen(),
+          : SignInScreen(),
     );
   }
 }
