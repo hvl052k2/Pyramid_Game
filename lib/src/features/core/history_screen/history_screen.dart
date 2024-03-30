@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pyramid_game/src/common_widgets/custom_appbar.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:intl/intl.dart';
 import 'package:pyramid_game/src/features/core/result_screen/result_screen.dart';
@@ -14,10 +16,13 @@ class HistoryScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: whiteColor,
-        appBar: AppBar(
+        appBar: CustomAppBar(
+          isCenter: true,
           backgroundColor: whiteColor,
-          title: const Text(
-            "HISTORY",
+          iconColor: primaryColor,
+          shape: Border(bottom: BorderSide(color: primaryColor, width: 1)),
+          title: Text(
+            "HISTORY".tr,
             style: TextStyle(
               color: primaryColor,
               fontFamily: 'EBGaramond',
@@ -25,17 +30,6 @@ class HistoryScreen extends StatelessWidget {
               fontSize: 30,
               letterSpacing: 5,
             ),
-          ),
-          centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_rounded,
-              size: 35,
-              color: primaryColor,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
           ),
         ),
         body: StreamBuilder<QuerySnapshot>(
@@ -79,17 +73,69 @@ class HistoryScreen extends StatelessWidget {
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Id: ${document?.id}"),
-                            Text("Title: ${document?["title"]}"),
+                            Row(
+                              children: [
+                                const Icon(Icons.home_outlined),
+                                const SizedBox(width: 10),
+                                Text(
+                                  "${document?.id}",
+                                  style: const TextStyle(
+                                    color: primaryColor,
+                                    fontFamily: 'EBGaramond',
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Icon(Icons.track_changes),
+                                const SizedBox(width: 10),
+                                Text(
+                                  "${document?["title"]}",
+                                  style: const TextStyle(
+                                    color: primaryColor,
+                                    fontFamily: 'EBGaramond',
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Number of players: ${document?["numberOfPlayers"]}",
+                            Row(
+                              children: [
+                                const Icon(Icons.person_2_outlined),
+                                const SizedBox(width: 10),
+                                Text(
+                                  "${document?["numberOfPlayers"]}",
+                                  style: const TextStyle(
+                                    color: primaryColor,
+                                    fontFamily: 'EBGaramond',
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text("Created at: $formattedDate"),
+                            Row(
+                              children: [
+                                const Icon(Icons.alarm),
+                                const SizedBox(width: 10),
+                                Text(
+                                  formattedDate,
+                                  style: const TextStyle(
+                                    color: primaryColor,
+                                    fontFamily: 'EBGaramond',
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                         trailing: const Icon(

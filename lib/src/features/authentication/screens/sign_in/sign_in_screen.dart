@@ -67,18 +67,19 @@ class SignInScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Column(
                 children: [
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.warning_rounded,
                         color: Colors.yellow,
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: Text(
-                          'Leak content, you will face the highest penalties.',
-                          style: TextStyle(
+                          'Leak content, you will face the highest penalties.'
+                              .tr,
+                          style: const TextStyle(
                             color: Colors.red,
                             fontFamily: 'EBGaramond',
                             fontSize: 16,
@@ -94,17 +95,17 @@ class SignInScreen extends StatelessWidget {
                       children: [
                         CustomTextFormField(
                           textController: signInController.email,
-                          hintText: "Email",
+                          hintText: "Email".tr,
                           prefixIcon: Icons.email_outlined,
                           validator: (value) {
                             bool emailValid = RegExp(
                                     r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
                                 .hasMatch(value!);
                             if (value.isEmpty) {
-                              return "Enter email.";
+                              return "Enter email.".tr;
                             }
                             if (!emailValid) {
-                              return "Enter valid email.";
+                              return "Enter valid email.".tr;
                             }
                             return null;
                           },
@@ -114,7 +115,7 @@ class SignInScreen extends StatelessWidget {
                           () => CustomTextFormField(
                             obscured: signInController.obscured.value,
                             textController: signInController.password,
-                            hintText: "Password",
+                            hintText: "Password".tr,
                             prefixIcon: Icons.lock_outline,
                             suffixIcon: IconButton(
                               icon: Icon(
@@ -129,15 +130,18 @@ class SignInScreen extends StatelessWidget {
                                       r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$")
                                   .hasMatch(value!);
                               if (value.isEmpty) {
-                                return "Enter password.";
+                                return "Enter password.".tr;
                               } else if (signInController.password.text.length <
                                   8) {
-                                return "Password length should not be lass than 8 characters.";
+                                return "Password length should not be less than 8 characters."
+                                    .tr;
                               }
                               if (!passwordValid) {
                                 return [
-                                  "Password should contain at least one upper case,",
+                                  "Password should contain at least one upper case,"
+                                      .tr,
                                   "one lower case, one digit, and one special character."
+                                      .tr
                                 ].join("\n");
                               }
                               return null;
@@ -155,9 +159,9 @@ class SignInScreen extends StatelessWidget {
                         onPressed: () {
                           Get.to(() => ForgotPasswordScreen());
                         },
-                        child: const Text(
-                          'Forgot password ?',
-                          style: TextStyle(
+                        child: Text(
+                          'Forgot password ?'.tr,
+                          style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             color: whiteColor,
                             fontSize: 18,
@@ -184,7 +188,7 @@ class SignInScreen extends StatelessWidget {
                           }
                         },
                         isLoading: signInController.isLoading.value,
-                        textContent: "SIGN IN",
+                        textContent: "SIGN IN".tr,
                       ),
                     ),
                   ),
@@ -192,9 +196,9 @@ class SignInScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Don\'t have an account?',
-                        style: TextStyle(
+                      Text(
+                        'Don\'t have an account?'.tr,
+                        style: const TextStyle(
                           color: whiteColor,
                           fontFamily: 'EBGaramond',
                           fontSize: 18,
@@ -204,9 +208,9 @@ class SignInScreen extends StatelessWidget {
                         onPressed: () {
                           Get.to(() => SignUpScreen());
                         },
-                        child: const Text(
-                          'Sign up',
-                          style: TextStyle(
+                        child: Text(
+                          'Sign up'.tr,
+                          style: const TextStyle(
                             fontWeight: FontWeight.w700,
                             color: whiteColor,
                             fontSize: 20,

@@ -8,11 +8,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.action,
     this.title,
     this.isCenter = false,
+    this.backgroundColor = primaryColor,
+    this.shape,
+    this.iconColor = whiteColor,
   });
 
   final List<Widget>? action;
   final Widget? title;
   final bool isCenter;
+  final Color backgroundColor;
+  final ShapeBorder? shape;
+  final Color iconColor;
 
   @override
   Size get preferredSize => Size.fromHeight(AppBar().preferredSize.height);
@@ -22,12 +28,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: title,
       centerTitle: isCenter,
-      backgroundColor: primaryColor,
+      backgroundColor: backgroundColor,
+      shape: shape,
       leading: IconButton(
-        icon: const Icon(
+        icon: Icon(
           Icons.arrow_back_rounded,
           size: 35,
-          color: whiteColor,
+          color: iconColor,
         ),
         onPressed: () {
           Get.back();

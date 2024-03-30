@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pyramid_game/src/common_widgets/custom_appbar.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/constants/image_strings.dart';
 import 'package:pyramid_game/src/constants/sizes.dart';
@@ -59,31 +61,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
       'avatarImage': avatarImageUrl,
       'wallImage': wallImageUrl,
     }).then((value) {
-      showSnackBar("Update sucessfully", true);
+      Get.snackbar(
+        "Information".tr,
+        "Update successfully".tr,
+        colorText: whiteColor,
+        backgroundColor: Colors.green,
+      );
       setState(() {
         isLoading = false;
       });
-      Navigator.pop(context);
+      Get.back();
     });
   }
 
-  void showUpdateDialog(BuildContext context) {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(
-          "Update Profile",
-          style: TextStyle(fontWeight: FontWeight.w700),
-          textAlign: TextAlign.center,
-        ),
-        content: const Text(
-          "Are you sure to update profile?",
-          textAlign: TextAlign.center,
-        ),
-        actions: [
-          StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
+  void showUpdateDialog() {
+    Get.defaultDialog(
+      title: "Update profile".tr,
+      titleStyle: const TextStyle(color: Colors.green),
+      content: Text(
+        "Are you sure to update profile?".tr,
+        textAlign: TextAlign.center,
+      ),
+      actions: [
+        StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
             return isLoading
                 ? const Center(
                     child: CircularProgressIndicator(
@@ -96,17 +97,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       OutlinedButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          Get.back();
                         },
                         style: OutlinedButton.styleFrom(
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
+                            borderRadius: BorderRadius.circular(25.0),
                           ),
                           padding: const EdgeInsets.all(10.0),
                         ),
-                        child: const Text(
-                          'Cancle',
-                          style: TextStyle(color: primaryColor),
+                        child: Text(
+                          'Cancle'.tr,
+                          style: const TextStyle(color: primaryColor),
                         ),
                       ),
                       ElevatedButton(
@@ -114,52 +115,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           setState(() {
                             isLoading = true;
                           });
-                          await uploadImageToFirebase();
+                          // await uploadImageToFirebase();
                           updateUser();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primaryColor,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
+                            borderRadius: BorderRadius.circular(25.0),
                           ),
                           padding: const EdgeInsets.all(10.0),
                         ),
-                        child: const Text(
-                          'Ok',
-                          style: TextStyle(color: whiteColor),
+                        child: Text(
+                          'Ok'.tr,
+                          style: const TextStyle(color: whiteColor),
                         ),
                       ),
                     ],
                   );
-          })
-        ],
-      ),
+          },
+        )
+      ],
+      barrierDismissible: false,
+      contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
     );
   }
-
-  void showSnackBar(String message, bool status) =>
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(children: [
-            Icon(
-              status ? Icons.done_rounded : Icons.info_rounded,
-              color: whiteColor,
-              size: 30,
-            ),
-            const SizedBox(width: 10),
-            Text(
-              message,
-              style: const TextStyle(
-                fontSize: 18,
-                color: whiteColor,
-                fontFamily: 'EBGaramond',
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ]),
-          backgroundColor: status ? Colors.green : Colors.red,
-        ),
-      );
 
   Future _pickImageFromGallery(String type) async {
     final returnImage =
@@ -175,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     });
 
-    if (context.mounted) Navigator.pop(context);
+    Get.back();
   }
 
   Future _pickImageFromCamera(String type) async {
@@ -191,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _avatarImage = File(returnImage.path).readAsBytesSync();
       }
     });
-    if (context.mounted) Navigator.pop(context);
+    Get.back();
   }
 
   void showImagePickerOption(BuildContext context, String type) {
@@ -212,15 +191,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onTap: () {
                         _pickImageFromCamera(type);
                       },
-                      child: const Column(children: [
-                        Icon(
+                      child: Column(children: [
+                        const Icon(
                           Icons.camera_alt,
                           color: primaryColor,
                           size: 70,
                         ),
                         Text(
-                          "Camera",
-                          style: TextStyle(
+                          "Camera".tr,
+                          style: const TextStyle(
                             color: primaryColor,
                             fontFamily: "EBGaramond",
                             fontWeight: FontWeight.w500,
@@ -235,15 +214,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onTap: () {
                         _pickImageFromGallery(type);
                       },
-                      child: const Column(children: [
-                        Icon(
+                      child: Column(children: [
+                        const Icon(
                           Icons.image,
                           color: primaryColor,
                           size: 70,
                         ),
                         Text(
-                          "Gallery",
-                          style: TextStyle(
+                          "Gallery".tr,
+                          style: const TextStyle(
                             color: primaryColor,
                             fontFamily: "EBGaramond",
                             fontWeight: FontWeight.w500,
@@ -267,28 +246,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: primaryColor,
-        appBar: AppBar(
-          backgroundColor: primaryColor,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              size: 35,
-              color: whiteColor,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: const Text(
-            "Edit profile",
-            style: TextStyle(
+        appBar: CustomAppBar(
+          isCenter: true,
+          title: Text(
+            "Profile".tr,
+            style: const TextStyle(
               color: whiteColor,
               fontFamily: "EBGaramond",
               fontWeight: FontWeight.w500,
               fontSize: 30,
             ),
           ),
-          centerTitle: true,
         ),
         body: StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance
@@ -395,9 +363,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "Name",
-                              style: TextStyle(color: whiteColor),
+                            Text(
+                              "Name".tr,
+                              style: const TextStyle(
+                                color: whiteColor,
+                                fontFamily: 'EBGaramond',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18,
+                              ),
                             ),
                             TextField(
                               controller: nameController,
@@ -417,9 +390,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "Phone",
-                              style: TextStyle(color: whiteColor),
+                            Text(
+                              "Phone".tr,
+                              style: const TextStyle(
+                                color: whiteColor,
+                                fontFamily: 'EBGaramond',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18,
+                              ),
                             ),
                             TextField(
                               controller: phoneController,
@@ -439,9 +417,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "Bio",
-                              style: TextStyle(color: whiteColor),
+                            Text(
+                              "Bio".tr,
+                              style: const TextStyle(
+                                color: whiteColor,
+                                fontFamily: 'EBGaramond',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18,
+                              ),
                             ),
                             SizedBox(
                               width: double.infinity,
@@ -466,7 +449,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              showUpdateDialog(context);
+                              showUpdateDialog();
                             },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: primaryColor,
@@ -475,9 +458,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 vertical: buttonHeight,
                               ),
                             ),
-                            child: const Text(
-                              'UPDATE',
-                              style: TextStyle(
+                            child: Text(
+                              'UPDATE'.tr,
+                              style: const TextStyle(
                                 color: whiteColor,
                                 fontFamily: 'EBGaramond',
                                 fontWeight: FontWeight.w700,

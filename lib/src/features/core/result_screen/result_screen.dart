@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/features/core/home_screen/home_screen.dart';
 import 'package:pyramid_game/src/features/core/result_screen/result_screen_widgets/custom_progress_bar.dart';
@@ -14,66 +15,54 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen> {
-  void showExitDialog(
-      BuildContext context, String titleText, String contentText) {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          titleText,
-          textAlign: TextAlign.center,
-          style:
-              const TextStyle(fontWeight: FontWeight.w700, color: Colors.red),
-        ),
-        content: Text(
-          contentText,
-          textAlign: TextAlign.center,
-        ),
-        actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => const HomePage(),
-                    ),
-                  );
-                },
-                style: OutlinedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  padding: const EdgeInsets.all(10.0),
-                ),
-                child: const Text(
-                  'Yes',
-                  style: TextStyle(color: primaryColor),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  padding: const EdgeInsets.all(10.0),
-                ),
-                child: const Text(
-                  'No',
-                  style: TextStyle(color: whiteColor),
-                ),
-              ),
-            ],
-          ),
-        ],
+  void showExitDialog() {
+    Get.defaultDialog(
+      title: "Information",
+      titleStyle: const TextStyle(color: Colors.red),
+      content: const Text(
+        "Do you want to exit?",
+        textAlign: TextAlign.center,
       ),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            OutlinedButton(
+              onPressed: () {
+                Get.offAll(() => HomePage());
+              },
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                padding: const EdgeInsets.all(10.0),
+              ),
+              child: Text(
+                'Yes'.tr,
+                style: TextStyle(color: primaryColor),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Get.back();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                padding: const EdgeInsets.all(10.0),
+              ),
+              child: Text(
+                'No'.tr,
+                style: TextStyle(color: whiteColor),
+              ),
+            ),
+          ],
+        ),
+      ],
+      barrierDismissible: false,
+      contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
     );
   }
 
@@ -86,7 +75,6 @@ class _ResultScreenState extends State<ResultScreen> {
     Map rankListsMapFirebase = docSnapshot["rankListsMap"];
     String titleFirebase = docSnapshot["title"];
     for (var item in attendersFirebase) {
-      print("=================== Saving history ====================");
       final userData = await FirebaseFirestore.instance
           .collection("Users")
           .doc(item["gmail"])
@@ -128,8 +116,8 @@ class _ResultScreenState extends State<ResultScreen> {
             shape: const Border(
               bottom: BorderSide(color: whiteColor, width: 1),
             ),
-            title: const Text(
-              "RESULT",
+            title: Text(
+              "RESULT".tr,
               style: TextStyle(
                 color: whiteColor,
                 fontFamily: 'EBGaramond',
@@ -148,7 +136,7 @@ class _ResultScreenState extends State<ResultScreen> {
                       color: whiteColor,
                     ),
                     onPressed: () {
-                      Navigator.pop(context);
+                      Get.back();
                     },
                   )
                 : Container(),
@@ -161,11 +149,7 @@ class _ResultScreenState extends State<ResultScreen> {
                         color: whiteColor,
                       ),
                       onPressed: () {
-                        showExitDialog(
-                          context,
-                          "Information",
-                          "Do you want to exit?",
-                        );
+                        showExitDialog();
                       },
                     )
                   : Container(),

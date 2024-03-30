@@ -28,19 +28,20 @@ class SignInController extends GetxController {
       if (credential.user!.emailVerified) {
         toggleIsLoading(false);
         Get.snackbar(
-          "Information",
-          "Sign in successfully",
+          "Information".tr,
+          "Sign in successfully".tr,
           colorText: whiteColor,
           backgroundColor: Colors.green,
         );
-        Get.offAll(const HomePage());
+        Get.offAll(HomePage());
       } else {
         toggleIsLoading(false);
         Get.defaultDialog(
-          title: "Information",
+          title: "Information".tr,
           titleStyle: const TextStyle(color: Colors.red),
-          content: const Text(
-            "Your email is not authenticated.\nPlease check your verification email before signing in.",
+          content: Text(
+            "Your email is not authenticated.\nPlease check your verification email before signing in."
+                .tr,
             textAlign: TextAlign.center,
           ),
           onConfirm: () => Get.back(),
@@ -52,8 +53,8 @@ class SignInController extends GetxController {
     } on FirebaseAuthException {
       toggleIsLoading(false);
       Get.snackbar(
-        "Information",
-        "Account or password is incorrect",
+        "Information".tr,
+        "Account or password is incorrect".tr,
         colorText: whiteColor,
         backgroundColor: Colors.red,
       );

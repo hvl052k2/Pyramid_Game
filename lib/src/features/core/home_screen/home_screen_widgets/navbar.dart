@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/constants/image_strings.dart';
 import 'package:pyramid_game/src/features/authentication/screens/profile/profile_screen.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_in/sign_in_screen.dart';
 import 'package:pyramid_game/src/features/core/history_screen/history_screen.dart';
+import 'package:pyramid_game/src/features/core/settings_screen/settings_screen.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
@@ -17,39 +19,15 @@ class NavBar extends StatefulWidget {
 class _NavBarState extends State<NavBar> {
   final auth = FirebaseAuth.instance;
 
-  void showSnackBar(String message, bool status) =>
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(children: [
-            Icon(
-              status ? Icons.done_rounded : Icons.info_rounded,
-              color: whiteColor,
-              size: 30,
-            ),
-            const SizedBox(width: 10),
-            Text(
-              message,
-              style: const TextStyle(
-                fontSize: 18,
-                color: whiteColor,
-                fontFamily: 'EBGaramond',
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ]),
-          backgroundColor: status ? Colors.green : Colors.red,
-        ),
-      );
-
   void signOut() async {
     await auth.signOut().then((value) => {
-          showSnackBar("Sign out successfully", true),
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => SignInScreen(),
-            ),
-          )
+          Get.snackbar(
+            "Information".tr,
+            "Sign out successfully".tr,
+            colorText: whiteColor,
+            backgroundColor: Colors.green,
+          ),
+          Get.offAll(() => SignInScreen())
         });
   }
 
@@ -71,18 +49,40 @@ class _NavBarState extends State<NavBar> {
                 Column(
                   children: [
                     UserAccountsDrawerHeader(
-                      accountName: Text(
-                        userData["userName"],
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
+                      accountName: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: primaryColor,
+                        ),
+                        child: Text(
+                          userData["userName"],
+                          style: const TextStyle(
+                            color: whiteColor,
+                            fontFamily: 'EBGaramond',
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                      accountEmail: Text(
-                        auth.currentUser!.email.toString(),
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
+                      accountEmail: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: primaryColor,
+                        ),
+                        child: Text(
+                          auth.currentUser!.email.toString(),
+                          style: const TextStyle(
+                            color: whiteColor,
+                            fontFamily: 'EBGaramond',
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                       currentAccountPicture: userData["avatarImage"] != null
@@ -106,33 +106,45 @@ class _NavBarState extends State<NavBar> {
                     ),
                     ListTile(
                       leading: const Icon(Icons.person),
-                      title: const Text("Profile"),
+                      title: Text(
+                        "Profile".tr,
+                        style: const TextStyle(
+                          fontFamily: 'EBGaramond',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
+                      ),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                const ProfileScreen(),
-                          ),
-                        );
+                        Get.to(() => const ProfileScreen());
                       },
                     ),
                     ListTile(
                       leading: const Icon(Icons.settings_backup_restore),
-                      title: const Text("History"),
+                      title: Text(
+                        "History".tr,
+                        style: const TextStyle(
+                          fontFamily: 'EBGaramond',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
+                      ),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => HistoryScreen(),
-                          ),
-                        );
+                        Get.to(() => HistoryScreen());
                       },
                     ),
                     ListTile(
                       leading: const Icon(Icons.settings),
-                      title: const Text("Setting"),
-                      onTap: () {},
+                      title: Text(
+                        "Settings".tr,
+                        style: const TextStyle(
+                          fontFamily: 'EBGaramond',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
+                      ),
+                      onTap: () {
+                        Get.to(() => const SettingsScreen());
+                      },
                     ),
                   ],
                 ),
@@ -146,7 +158,14 @@ class _NavBarState extends State<NavBar> {
                     ),
                     ListTile(
                       leading: const Icon(Icons.logout_rounded),
-                      title: const Text("Sign out"),
+                      title: Text(
+                        "Sign out".tr,
+                        style: const TextStyle(
+                          fontFamily: 'EBGaramond',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
+                      ),
                       onTap: signOut,
                     ),
                   ],

@@ -45,10 +45,11 @@ class SignUpController extends GetxController {
       toggleIsLoading(false);
       FirebaseAuth.instance.currentUser!.sendEmailVerification().then((value) {
         Get.defaultDialog(
-          title: "Information",
-          titleStyle: const TextStyle(color: Colors.red),
-          content: const Text(
-            "Sign up successfully!\nPlease, check your email to verify account",
+          title: "Information".tr,
+          titleStyle: const TextStyle(color: Colors.green),
+          content: Text(
+            "Sign up successfully!\nPlease, check your email to verify account"
+                .tr,
             textAlign: TextAlign.center,
           ),
           onConfirm: () => Get.back(),
@@ -61,8 +62,8 @@ class SignUpController extends GetxController {
       if (e.code == "email-already-in-use") {
         toggleIsLoading(false);
         Get.snackbar(
-          "Information",
-          "The account already exists for that email.",
+          "Information".tr,
+          "The account already exists for this email.".tr,
           colorText: whiteColor,
           backgroundColor: Colors.red,
         );
@@ -70,7 +71,7 @@ class SignUpController extends GetxController {
     } catch (e) {
       toggleIsLoading(false);
       Get.snackbar(
-        "Information",
+        "Information".tr,
         e.toString(),
         colorText: whiteColor,
         backgroundColor: Colors.red,

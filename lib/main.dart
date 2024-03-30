@@ -5,6 +5,7 @@ import 'package:pyramid_game/firebase_options.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_in/sign_in_screen.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_up/sign_up_screen.dart';
 import 'package:pyramid_game/src/features/core/home_screen/home_screen.dart';
+import 'package:pyramid_game/src/utils/locale.dart';
 import 'package:pyramid_game/src/utils/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -46,10 +47,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      translations: LocaleString(),
+      // locale: const Locale('en', 'US'),
+      locale: Get.deviceLocale,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
       home: (isSignedIn && auth.currentUser!.emailVerified)
-          ? const HomePage()
+          ? HomePage()
           : SignInScreen(),
     );
   }

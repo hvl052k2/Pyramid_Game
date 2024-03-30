@@ -71,11 +71,11 @@ class SignUpScreen extends StatelessWidget {
                       children: [
                         CustomTextFormField(
                           textController: signUpController.fullName,
-                          hintText: 'Full name',
+                          hintText: 'Full name'.tr,
                           prefixIcon: Icons.person_2_outlined,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return "Enter your full name.";
+                              return "Enter your full name.".tr;
                             }
                             return null;
                           },
@@ -83,17 +83,17 @@ class SignUpScreen extends StatelessWidget {
                         const SizedBox(height: 10),
                         CustomTextFormField(
                           textController: signUpController.email,
-                          hintText: "Email",
+                          hintText: "Email".tr,
                           prefixIcon: Icons.email_outlined,
                           validator: (value) {
                             bool emailValid = RegExp(
                                     r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
                                 .hasMatch(value!);
                             if (value.isEmpty) {
-                              return "Enter email.";
+                              return "Enter email.".tr;
                             }
                             if (!emailValid) {
-                              return "Enter valid email.";
+                              return "Enter valid email.".tr;
                             }
                             return null;
                           },
@@ -103,7 +103,7 @@ class SignUpScreen extends StatelessWidget {
                           () => CustomTextFormField(
                             obscured: signUpController.obscured.value,
                             textController: signUpController.password,
-                            hintText: "Password",
+                            hintText: "Password".tr,
                             prefixIcon: Icons.lock_outline,
                             suffixIcon: IconButton(
                               icon: Icon(
@@ -118,15 +118,18 @@ class SignUpScreen extends StatelessWidget {
                                       r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$")
                                   .hasMatch(value!);
                               if (value.isEmpty) {
-                                return "Enter password.";
+                                return "Enter password.".tr;
                               } else if (signUpController.password.text.length <
                                   8) {
-                                return "Password length should not be lass than 8 characters.";
+                                return "Password length should not be less than 8 characters."
+                                    .tr;
                               }
                               if (!passwordValid) {
                                 return [
-                                  "Password should contain at least one upper case,",
+                                  "Password should contain at least one upper case,"
+                                      .tr,
                                   "one lower case, one digit, and one special character."
+                                      .tr
                                 ].join("\n");
                               }
                               return null;
@@ -138,7 +141,7 @@ class SignUpScreen extends StatelessWidget {
                           () => CustomTextFormField(
                             obscured: signUpController.obscured.value,
                             textController: signUpController.confirmPassword,
-                            hintText: "Confirm password",
+                            hintText: "Confirm password".tr,
                             prefixIcon: Icons.lock_outline,
                             suffixIcon: IconButton(
                               icon: Icon(
@@ -150,11 +153,11 @@ class SignUpScreen extends StatelessWidget {
                             ),
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "Please Re-enter your password.";
+                                return "Please re-enter your password.".tr;
                               }
                               if (signUpController.password.text !=
                                   signUpController.confirmPassword.text) {
-                                return "Password does not match.";
+                                return "Password does not match.".tr;
                               }
                               return null;
                             },
@@ -175,9 +178,9 @@ class SignUpScreen extends StatelessWidget {
                           },
                         ),
                       ),
-                      const Text(
-                        'I agree with all the rules.',
-                        style: TextStyle(
+                      Text(
+                        'I agree with all the rules.'.tr,
+                        style: const TextStyle(
                           color: Colors.red,
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
@@ -204,7 +207,7 @@ class SignUpScreen extends StatelessWidget {
                               }
                             : null,
                         isLoading: signUpController.isLoading.value,
-                        textContent: "SIGN UP",
+                        textContent: "SIGN UP".tr,
                         disableBackCorlor: Colors.grey,
                         disableForeCorlor: whiteColor,
                       ),
@@ -214,9 +217,9 @@ class SignUpScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Already have an account?',
-                        style: TextStyle(
+                      Text(
+                        'Already have an account?'.tr,
+                        style: const TextStyle(
                           color: whiteColor,
                           fontFamily: 'EBGaramond',
                           fontSize: 18,
@@ -226,9 +229,9 @@ class SignUpScreen extends StatelessWidget {
                         onPressed: () {
                           Get.back();
                         },
-                        child: const Text(
-                          'Sign in',
-                          style: TextStyle(
+                        child: Text(
+                          'Sign in'.tr,
+                          style: const TextStyle(
                             fontWeight: FontWeight.w700,
                             color: whiteColor,
                             fontSize: 20,

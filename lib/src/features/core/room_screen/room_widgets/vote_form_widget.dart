@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
+import 'package:pyramid_game/src/features/authentication/controllers/room_controller.dart';
 import 'package:pyramid_game/src/features/core/room_screen/room_screen.dart';
 
 class VoteFormWidget extends StatelessWidget {
@@ -9,14 +11,14 @@ class VoteFormWidget extends StatelessWidget {
     super.key,
     required this.size,
     required this.order,
-    required this.roomId,
     required this.attenderList,
+    required this.onSelected,
   });
 
   final Size size;
   final String order;
-  final String roomId;
   final List attenderList;
+  final Function(Text?)? onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +51,7 @@ class VoteFormWidget extends StatelessWidget {
             ),
           ),
           requestFocusOnTap: true,
-          onSelected: (person) {
-            if (person != null) {
-              //Do something
-            }
-          },
+          onSelected: onSelected,
           trailingIcon: const Icon(
             Icons.arrow_drop_down,
             color: whiteColor,
@@ -64,14 +62,17 @@ class VoteFormWidget extends StatelessWidget {
           dropdownMenuEntries: List.from(attenderList)
               .map(
                 (item) => DropdownMenuEntry(
-                  value: Text(item["attenderName"]),
-                  label: item["attenderName"].toString(),
+                  value: Text({
+                    '"gmail": "${item["gmail"]}"',
+                    '"name": "${item["name"]}"'
+                  }.toString()),
+                  label: item["name"].toString(),
                   labelWidget: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(item["attenderName"]),
+                      Text(item["name"]),
                       Text(
-                        item["attenderGmail"],
+                        item["gmail"],
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 12,

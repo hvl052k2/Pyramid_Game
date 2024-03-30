@@ -29,9 +29,9 @@ class ForgotPasswordScreen extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'FORGOT ',
-                  style: TextStyle(
+                Text(
+                  'FORGOT'.tr,
+                  style: const TextStyle(
                     fontSize: 40,
                     color: whiteColor,
                     fontFamily: 'EBGaramond',
@@ -45,9 +45,9 @@ class ForgotPasswordScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     color: whiteColor,
                   ),
-                  child: const Text(
-                    'PASSWORD?',
-                    style: TextStyle(
+                  child: Text(
+                    'PASSWORD?'.tr,
+                    style: const TextStyle(
                       fontSize: 50,
                       color: primaryColor,
                       fontFamily: 'EBGaramond',
@@ -65,17 +65,17 @@ class ForgotPasswordScreen extends StatelessWidget {
                   children: [
                     CustomTextFormField(
                       textController: forgotPasswordController.email,
-                      hintText: "Email",
+                      hintText: "Email".tr,
                       prefixIcon: Icons.email_outlined,
                       validator: (value) {
                         bool emailValid = RegExp(
                                 r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
                             .hasMatch(value!);
                         if (value.isEmpty) {
-                          return "Enter email.";
+                          return "Enter email.".tr;
                         }
                         if (!emailValid) {
-                          return "Enter valid email.";
+                          return "Enter valid email.".tr;
                         }
                         return null;
                       },
@@ -95,7 +95,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                             }
                           },
                           isLoading: forgotPasswordController.isLoading.value,
-                          textContent: "RESET PASSWORD",
+                          textContent: "RESET PASSWORD".tr,
                         ),
                       ),
                     ),

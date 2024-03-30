@@ -23,10 +23,11 @@ class ForgotPasswordController extends GetxController {
       auth.sendPasswordResetEmail(email: emailText).then(
             (value) => {
               Get.defaultDialog(
-                title: "Successfully",
+                title: "Information".tr,
                 titleStyle: const TextStyle(color: Colors.green),
-                content: const Text(
-                  "Reset password link has been sent to your registered email address.",
+                content: Text(
+                  "Reset password link has been sent to your registered email address."
+                      .tr,
                   textAlign: TextAlign.center,
                 ),
                 onConfirm: () => Get.back(),
@@ -40,10 +41,10 @@ class ForgotPasswordController extends GetxController {
           );
     } else {
       Get.defaultDialog(
-        title: "Fail",
+        title: "Information".tr,
         titleStyle: const TextStyle(color: Colors.red),
-        content: const Text(
-          "Email does not exist",
+        content: Text(
+          "Email does not exist".tr,
           textAlign: TextAlign.center,
         ),
         onConfirm: () => Get.back(),
