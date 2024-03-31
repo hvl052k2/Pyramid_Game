@@ -17,10 +17,10 @@ class ResultScreen extends StatefulWidget {
 class _ResultScreenState extends State<ResultScreen> {
   void showExitDialog() {
     Get.defaultDialog(
-      title: "Information",
+      title: "Information".tr,
       titleStyle: const TextStyle(color: Colors.red),
-      content: const Text(
-        "Do you want to exit?",
+      content: Text(
+        "Do you want to exit?".tr,
         textAlign: TextAlign.center,
       ),
       actions: [
@@ -39,7 +39,7 @@ class _ResultScreenState extends State<ResultScreen> {
               ),
               child: Text(
                 'Yes'.tr,
-                style: TextStyle(color: primaryColor),
+                style: const TextStyle(color: primaryColor),
               ),
             ),
             ElevatedButton(
@@ -55,7 +55,7 @@ class _ResultScreenState extends State<ResultScreen> {
               ),
               child: Text(
                 'No'.tr,
-                style: TextStyle(color: whiteColor),
+                style: const TextStyle(color: whiteColor),
               ),
             ),
           ],
@@ -118,7 +118,7 @@ class _ResultScreenState extends State<ResultScreen> {
             ),
             title: Text(
               "RESULT".tr,
-              style: TextStyle(
+              style: const TextStyle(
                 color: whiteColor,
                 fontFamily: 'EBGaramond',
                 fontWeight: FontWeight.w700,

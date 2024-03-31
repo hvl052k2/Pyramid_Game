@@ -5,7 +5,6 @@ import 'package:pyramid_game/src/common_widgets/custom_elevated_button.dart';
 import 'package:pyramid_game/src/common_widgets/custom_text_form_field.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/constants/image_strings.dart';
-import 'package:pyramid_game/src/constants/sizes.dart';
 import 'package:pyramid_game/src/features/authentication/controllers/sign_up_controller.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -200,8 +199,12 @@ class SignUpScreen extends StatelessWidget {
                                     .validate()) {
                                   signUpController.toggleIsLoading(true);
                                   signUpController.signUp(
-                                    signUpController.email.text.toString(),
-                                    signUpController.password.text.toString(),
+                                    signUpController.email.text
+                                        .toString()
+                                        .trim(),
+                                    signUpController.password.text
+                                        .toString()
+                                        .trim(),
                                   );
                                 }
                               }

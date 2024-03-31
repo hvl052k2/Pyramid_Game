@@ -249,12 +249,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appBar: CustomAppBar(
           isCenter: true,
           title: Text(
-            "Profile".tr,
+            "PROFILE".tr,
             style: const TextStyle(
               color: whiteColor,
               fontFamily: "EBGaramond",
               fontWeight: FontWeight.w500,
               fontSize: 30,
+              // letterSpacing: 5,
             ),
           ),
         ),

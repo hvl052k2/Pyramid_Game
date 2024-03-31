@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pyramid_game/src/common_widgets/custom_appbar.dart';
 import 'package:pyramid_game/src/common_widgets/custom_elevated_button.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/constants/image_strings.dart';
@@ -27,6 +25,7 @@ class _RoomScreenState extends State<RoomScreen> {
   //
   bool isCountdown = false;
   bool isAdmin = false;
+  bool canStart = false;
   final roomController = Get.put(RoomController());
   //
 
@@ -61,11 +60,17 @@ class _RoomScreenState extends State<RoomScreen> {
   }
 
   void startVoting() {
-    setState(() {
-      isCountdown = true;
-    });
-    roomController.updateIsCountdown(true);
-    roomController.updateSwitch(false);
+    if (canStart) {
+      setState(() {
+        isCountdown = true;
+      });
+      roomController.updateIsCountdown(true);
+      roomController.updateSwitch(false);
+    } else {
+      roomController.showInforDialog(
+          "The number of players is less than 5, it is impossible to start."
+              .tr);
+    }
   }
 
   @override
@@ -83,22 +88,25 @@ class _RoomScreenState extends State<RoomScreen> {
             backgroundColor: primaryColor,
             appBar: AppBar(
               backgroundColor: primaryColor,
-              leading: !isCountdown
-                  ? IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back_rounded,
-                        size: 35,
-                        color: whiteColor,
-                      ),
-                      onPressed: () {
-                        roomController.showExitDialog(
-                          context,
-                          "Information".tr,
-                          "Do you want to exit this room?".tr,
-                        );
-                      },
-                    )
-                  : Container(),
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_rounded,
+                  size: 35,
+                  color: whiteColor,
+                ),
+                onPressed: () {
+                  if (isCountdown) {
+                    roomController.showInforDialog(
+                        "You cannot leave the room while voting.".tr);
+                  } else {
+                    roomController.showExitDialog(
+                      context,
+                      "Information".tr,
+                      "Do you want to exit this room?".tr,
+                    );
+                  }
+                },
+              ),
               actions: [
                 isAdmin
                     ? ElevatedButton(
@@ -142,10 +150,14 @@ class _RoomScreenState extends State<RoomScreen> {
                 if (snapshot.hasData) {
                   final roomData =
                       snapshot.data!.data() as Map<String, dynamic>;
+                  if (List.from(roomData["attenders"]).length > 5) {
+                    canStart = true;
+                  }
                   if (roomData["isCountdown"]) {
                     timerController.start();
                     isCountdown = true;
                   }
+
                   return ListView(
                     children: [
                       Padding(

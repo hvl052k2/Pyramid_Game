@@ -4,12 +4,9 @@ import 'package:pyramid_game/src/common_widgets/custom_elevated_button.dart';
 import 'package:pyramid_game/src/common_widgets/custom_text_form_field.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/constants/image_strings.dart';
-import 'package:pyramid_game/src/constants/sizes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pyramid_game/src/features/authentication/controllers/sign_in_controller.dart';
 import 'package:pyramid_game/src/features/authentication/screens/forgot_password/forgot_password_screen.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_up/sign_up_screen.dart';
-import 'package:pyramid_game/src/features/core/home_screen/home_screen.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({
@@ -182,8 +179,8 @@ class SignInScreen extends StatelessWidget {
                               .validate()) {
                             signInController.toggleIsLoading(true);
                             signInController.signIn(
-                              signInController.email.text.toString(),
-                              signInController.password.text.toString(),
+                              signInController.email.text.toString().trim(),
+                              signInController.password.text.toString().trim(),
                             );
                           }
                         },

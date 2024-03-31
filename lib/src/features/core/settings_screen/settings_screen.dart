@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyramid_game/src/common_widgets/custom_appbar.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
+import 'package:pyramid_game/src/constants/storage.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -13,10 +14,19 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   late String selectedLanguage;
 
+  void toggleLanguage(String value) {
+    box.write('language', value);
+  }
+
   @override
   void initState() {
-    if (Get.deviceLocale!.languageCode == "vi") {
-      selectedLanguage = "Vietnamese";
+    // if (Get.deviceLocale!.languageCode == "vi") {
+    //   selectedLanguage = "Vietnamese";
+    // } else {
+    //   selectedLanguage = "English";
+    // }
+    if (box.read('language') != null) {
+      selectedLanguage = box.read('language');
     } else {
       selectedLanguage = "English";
     }
@@ -92,9 +102,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     if (newLanguage == "English") {
                       const locale = Locale('en', 'US');
                       Get.updateLocale(locale);
+                      toggleLanguage("English");
                     } else {
                       const locale = Locale('vi', 'Vie');
                       Get.updateLocale(locale);
+                      toggleLanguage("Vietnamese");
                     }
                   },
                 ),

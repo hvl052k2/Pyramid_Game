@@ -20,10 +20,11 @@ class HistoryScreen extends StatelessWidget {
           isCenter: true,
           backgroundColor: whiteColor,
           iconColor: primaryColor,
-          shape: Border(bottom: BorderSide(color: primaryColor, width: 1)),
+          shape:
+              const Border(bottom: BorderSide(color: primaryColor, width: 1)),
           title: Text(
             "HISTORY".tr,
-            style: TextStyle(
+            style: const TextStyle(
               color: primaryColor,
               fontFamily: 'EBGaramond',
               fontWeight: FontWeight.w700,
@@ -56,15 +57,10 @@ class HistoryScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: ListTile(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => ResultScreen(
+                          Get.to(() => ResultScreen(
                                 roomId: document!.id,
                                 type: "watchHistory",
-                              ),
-                            ),
-                          );
+                              ));
                         },
                         shape: const RoundedRectangleBorder(
                           side: BorderSide(color: primaryColor),

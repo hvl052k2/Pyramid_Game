@@ -1,10 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
-import 'package:pyramid_game/src/features/authentication/controllers/room_controller.dart';
-import 'package:pyramid_game/src/features/core/room_screen/room_screen.dart';
 
 class VoteFormWidget extends StatelessWidget {
   const VoteFormWidget({
