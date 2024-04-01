@@ -294,7 +294,7 @@ class _RoomScreenState extends State<RoomScreen> {
                                     children: [
                                       Countdown(
                                         controller: timerController,
-                                        seconds: 30,
+                                        seconds: 150,
                                         build: (_, double time) => Text(
                                           "${time.toInt().toString()}s",
                                           style: const TextStyle(
