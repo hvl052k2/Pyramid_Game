@@ -23,6 +23,7 @@ class LocaleString extends Translations {
               'one lower case, one digit, and one special character.',
           'Forgot password ?': 'Forgot password ?',
           'SIGN IN': 'SIGN IN',
+          'Sign in': 'Sign in',
           'Don\'t have an account?': 'Don\'t have an account?',
           'Sign up': 'Sign up',
           'Full name': 'Full name',
@@ -114,6 +115,8 @@ class LocaleString extends Translations {
               'The number of players is less than 5, it is impossible to start.',
           'You cannot leave the room while voting.':
               'You cannot leave the room while voting.',
+          "By registering, you agree to": "By registering, you agree to",
+          'our terms and conditions': 'our terms and conditions',
         },
         'vi_Vie': {
           'Language': 'Ngôn ngữ',
@@ -135,6 +138,7 @@ class LocaleString extends Translations {
               'một chữ thường, một chữ số và một ký tự đặc biệt.',
           'Forgot password ?': 'Quên mật khẩu ?',
           'SIGN IN': 'ĐĂNG NHẬP',
+          'Sign in': 'Đăng nhập',
           'Don\'t have an account?': 'Không có tài khoản?',
           'Sign up': 'Đăng ký',
           'Full name': 'Họ tên đầy đủ',
@@ -230,6 +234,8 @@ class LocaleString extends Translations {
               'số lượng người chơi ít hơn 5, không thể bắt đầu.',
           'You cannot leave the room while voting.':
               'Bạn không thể rời khỏi phòng khi đang bỏ phiếu.',
+          'By registering, you agree to': 'Bằng cách đăng ký, bạn đồng ý với ',
+          'our terms and conditions.': 'điều khoản và điều kiện của chúng tôi.',
         }
       };
 }

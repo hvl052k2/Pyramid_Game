@@ -212,6 +212,8 @@ class SignInScreen extends StatelessWidget {
                             color: whiteColor,
                             fontSize: 20,
                             fontFamily: 'EBGaramond',
+                            decoration: TextDecoration.underline,
+                            decorationColor: whiteColor,
                           ),
                         ),
                       )

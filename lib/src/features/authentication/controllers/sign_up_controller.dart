@@ -52,7 +52,10 @@ class SignUpController extends GetxController {
                 .tr,
             textAlign: TextAlign.center,
           ),
-          onConfirm: () => Get.back(),
+          onConfirm: () {
+            Get.back();
+            Get.back();
+          },
           barrierDismissible: false,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 15, horizontal: 20),

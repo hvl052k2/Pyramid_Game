@@ -6,6 +6,7 @@ import 'package:pyramid_game/src/common_widgets/custom_text_form_field.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/constants/image_strings.dart';
 import 'package:pyramid_game/src/features/authentication/controllers/sign_up_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({
@@ -13,6 +14,10 @@ class SignUpScreen extends StatelessWidget {
   });
 
   final signUpController = Get.put(SignUpController());
+  final Uri privacyUri = Uri(
+      scheme: 'https',
+      host: 'www.freeprivacypolicy.com',
+      path: 'live/532ceaaf-1c57-40bd-b485-8757131ceadc');
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +30,7 @@ class SignUpScreen extends StatelessWidget {
           children: [
             Image(
               image: const AssetImage(signUpLogo),
-              height: size.height * 0.25,
+              height: size.height * 0.23,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -33,7 +38,7 @@ class SignUpScreen extends StatelessWidget {
                 const Text(
                   'PYRAMID ',
                   style: TextStyle(
-                    fontSize: 40,
+                    fontSize: 35,
                     color: whiteColor,
                     fontFamily: 'EBGaramond',
                     fontWeight: FontWeight.w700,
@@ -49,7 +54,7 @@ class SignUpScreen extends StatelessWidget {
                   child: const Text(
                     'GAME',
                     style: TextStyle(
-                      fontSize: 50,
+                      fontSize: 40,
                       color: primaryColor,
                       fontFamily: 'EBGaramond',
                       fontWeight: FontWeight.w500,
@@ -167,6 +172,7 @@ class SignUpScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Row(
+                    // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Obx(
                         () => Checkbox(
@@ -177,14 +183,34 @@ class SignUpScreen extends StatelessWidget {
                           },
                         ),
                       ),
-                      Text(
-                        'I agree with all the rules.'.tr,
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'EBGaramond',
-                        ),
+                      Column(
+                        children: [
+                          Text(
+                            "By registering, you agree to".tr,
+                            style: const TextStyle(
+                              fontFamily: 'EBGaramond',
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: whiteColor,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              launchUrl(
+                                privacyUri,
+                                mode: LaunchMode.inAppWebView,
+                              );
+                            },
+                            child: Text(
+                              "our terms and conditions.".tr,
+                              style: const TextStyle(
+                                fontFamily: 'EBGaramond',
+                                fontSize: 18,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ],
                       )
                     ],
                   ),
@@ -239,6 +265,8 @@ class SignUpScreen extends StatelessWidget {
                             color: whiteColor,
                             fontSize: 20,
                             fontFamily: 'EBGaramond',
+                            decoration: TextDecoration.underline,
+                            decorationColor: whiteColor,
                           ),
                         ),
                       )
