@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/constants/image_strings.dart';
 import 'package:pyramid_game/src/constants/sizes.dart';
-import 'package:pyramid_game/src/features/authentication/controllers/home_controller.dart';
-import 'package:pyramid_game/src/features/core/home_screen/home_screen_widgets/navbar.dart';
+import 'package:pyramid_game/src/features/core/controllers/home_controller.dart';
+import 'package:pyramid_game/src/features/core/screens/home_screen/home_screen_widgets/navbar.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});

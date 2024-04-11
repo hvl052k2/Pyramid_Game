@@ -85,8 +85,8 @@ class LocaleString extends Translations {
           'You voted the same person': 'You voted the same person',
           'Be carefu, some votes are blank': 'Be carefu, some votes are blank',
           'GAME RULES': 'GAME RULES',
-          'The game can only start when the number of players is greater than 5.':
-              'The game can only start when the number of players is greater than 5.',
+          'The game can only start when the number of players is greater than 5 (minimum 6 persons).':
+              'The game can only start when the number of players is greater than 5 (minimum 6 persons).',
           'Only the room creator can start the game.':
               'Only the room creator can start the game.',
           'You will not be able to exit the room once the game is started.':
@@ -111,8 +111,8 @@ class LocaleString extends Translations {
           'Room status': 'Room status',
           'Close': 'Close',
           'Open': 'Open',
-          'The number of players is less than 5, it is impossible to start.':
-              'The number of players is less than 5, it is impossible to start.',
+          'The number of players is less than 6, it is impossible to start.':
+              'The number of players is less than 6, it is impossible to start.',
           'You cannot leave the room while voting.':
               'You cannot leave the room while voting.',
           "By registering, you agree to": "By registering, you agree to",
@@ -204,8 +204,8 @@ class LocaleString extends Translations {
           'Be carefu, some votes are blank':
               'Hãy cẩn thận, một số phiếu bầu bị bỏ trống',
           'GAME RULES': 'LUẬT CHƠI',
-          'The game can only start when the number of players is greater than 5.':
-              'Trò chơi chỉ có thể bắt đầu khi số lượng người chơi lớn hơn 5.',
+          'The game can only start when the number of players is greater than 5 (minimum 6 persons).':
+              'Trò chơi chỉ có thể bắt đầu khi số lượng người chơi lớn hơn 5 (tối thiểu 6 người).',
           'Only the room creator can start the game.':
               'Chỉ có người tạo phòng mới có thể bắt đầu trò chơi.',
           'You will not be able to exit the room once the game is started.':
@@ -230,8 +230,8 @@ class LocaleString extends Translations {
           'Room status': 'Trạng thái phòng',
           'Close': 'Đóng',
           'Open': 'Mở',
-          'The number of players is less than 5, it is impossible to start.':
-              'số lượng người chơi ít hơn 5, không thể bắt đầu.',
+          'The number of players is less than 6, it is impossible to start.':
+              'số lượng người chơi ít hơn 6, không thể bắt đầu.',
           'You cannot leave the room while voting.':
               'Bạn không thể rời khỏi phòng khi đang bỏ phiếu.',
           'By registering, you agree to': 'Bằng cách đăng ký, bạn đồng ý với ',

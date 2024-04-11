@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/constants/image_strings.dart';
-import 'package:pyramid_game/src/features/authentication/screens/profile/profile_screen.dart';
+import 'package:pyramid_game/src/features/core/screens/profile_screen/profile_screen.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_in/sign_in_screen.dart';
-import 'package:pyramid_game/src/features/core/history_screen/history_screen.dart';
-import 'package:pyramid_game/src/features/core/settings_screen/settings_screen.dart';
+import 'package:pyramid_game/src/features/core/screens/history_screen/history_screen.dart';
+import 'package:pyramid_game/src/features/core/screens/settings_screen/settings_screen.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key});

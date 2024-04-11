@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
-import 'package:pyramid_game/src/features/core/room_screen/room_screen.dart';
+import 'package:pyramid_game/src/features/core/screens/room_screen/room_screen.dart';
 
 class HomeController extends GetxController {
   RxBool isLoading = false.obs;
@@ -20,10 +20,19 @@ class HomeController extends GetxController {
     isLoading.value = value;
   }
 
-  String randomRoomId() {
+  Future<String> randomRoomId() async {
     final random = Random();
     final randomNumber = random.nextInt(1000000);
-    final formattedNumber = randomNumber.toString().padLeft(6, '0');
+    late String formattedNumber;
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentSnapshot<Map<String, dynamic>> docSnapshot;
+      do {
+        formattedNumber = randomNumber.toString().padLeft(9, '0');
+        docSnapshot = await transaction.get(FirebaseFirestore.instance
+            .collection("Rooms")
+            .doc(formattedNumber));
+      } while (docSnapshot.exists);
+    });
     return formattedNumber;
   }
 
@@ -131,7 +140,9 @@ class HomeController extends GetxController {
     late String roomId;
     late String userName;
     try {
-      roomId = randomRoomId();
+      roomId = await randomRoomId();
+
+      // Lấy userName của người tạo phòng
       await FirebaseFirestore.instance
           .collection("Users")
           .doc(auth!.email)
@@ -162,7 +173,7 @@ class HomeController extends GetxController {
       );
 
       Get.back();
-      Get.off(RoomScreen(roomId: roomId, title: title.text));
+      Get.off(() => RoomScreen(roomId: roomId, title: title.text));
 
       roomCode.clear();
       title.clear();
@@ -199,7 +210,7 @@ class HomeController extends GetxController {
                         decoration: InputDecoration(
                           hintText: "Room code".tr,
                         ),
-                        maxLength: 6,
+                        maxLength: 9,
                         keyboardType: TextInputType.number,
                         autofocus: true,
                         controller: roomCode,

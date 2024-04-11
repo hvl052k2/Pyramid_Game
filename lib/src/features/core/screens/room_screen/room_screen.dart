@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:pyramid_game/src/common_widgets/custom_elevated_button.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/constants/image_strings.dart';
-import 'package:pyramid_game/src/features/authentication/controllers/room_controller.dart';
-import 'package:pyramid_game/src/features/core/room_screen/room_widgets/vote_form_widget.dart';
+import 'package:pyramid_game/src/features/core/controllers/room_controller.dart';
+import 'package:pyramid_game/src/features/core/screens/room_screen/room_widgets/vote_form_widget.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
@@ -68,7 +68,7 @@ class _RoomScreenState extends State<RoomScreen> {
       roomController.updateSwitch(false);
     } else {
       roomController.showInforDialog(
-          "The number of players is less than 5, it is impossible to start."
+          "The number of players is less than 6, it is impossible to start."
               .tr);
     }
   }

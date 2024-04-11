@@ -4,8 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
-import 'package:pyramid_game/src/features/core/result_screen/result_screen.dart';
-import 'package:pyramid_game/src/features/core/room_screen/room_widgets/richText_widget.dart';
+import 'package:pyramid_game/src/features/core/screens/home_screen/home_screen.dart';
+import 'package:pyramid_game/src/features/core/screens/result_screen/result_screen.dart';
+import 'package:pyramid_game/src/features/core/screens/room_screen/room_widgets/richText_widget.dart';
 
 class RoomController extends GetxController {
   final auth = FirebaseAuth.instance.currentUser;
@@ -171,7 +172,7 @@ class RoomController extends GetxController {
 
     toggleIsLoading(false);
 
-    Get.off(() => ResultScreen(
+    Get.offAll(() => ResultScreen(
           roomId: roomId.value,
           type: "stream",
         ));
@@ -322,8 +323,7 @@ class RoomController extends GetxController {
 
         transaction.update(docSnapshot.reference, {"attenders": attenders});
       });
-
-      Get.back();
+      Get.off(() => HomePage());
     } catch (e) {
       // print(e.toString());
     }
@@ -465,7 +465,7 @@ class RoomController extends GetxController {
                     RichTextWidget(
                       order: "1) ",
                       content:
-                          "The game can only start when the number of players is greater than 5."
+                          "The game can only start when the number of players is greater than 5 (minimum 6 persons)."
                               .tr,
                     ),
                     const SizedBox(height: 5),

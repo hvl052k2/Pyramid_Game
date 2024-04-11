@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:pyramid_game/src/common_widgets/custom_appbar.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:intl/intl.dart';
-import 'package:pyramid_game/src/features/core/result_screen/result_screen.dart';
+import 'package:pyramid_game/src/features/core/screens/result_screen/result_screen.dart';
 
 class HistoryScreen extends StatelessWidget {
   HistoryScreen({super.key});

@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
-import 'package:pyramid_game/src/features/core/home_screen/home_screen.dart';
+import 'package:pyramid_game/src/features/core/screens/home_screen/home_screen.dart';
 
 class SignInController extends GetxController {
   RxBool obscured = false.obs;

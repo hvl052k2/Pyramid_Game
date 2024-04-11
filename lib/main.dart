@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:pyramid_game/firebase_options.dart';
 import 'package:pyramid_game/src/constants/storage.dart';
 import 'package:pyramid_game/src/features/authentication/screens/sign_in/sign_in_screen.dart';
-import 'package:pyramid_game/src/features/core/home_screen/home_screen.dart';
+import 'package:pyramid_game/src/features/core/screens/home_screen/home_screen.dart';
 import 'package:pyramid_game/src/utils/locale.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_storage/get_storage.dart';
