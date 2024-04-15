@@ -446,69 +446,72 @@ class RoomController extends GetxController {
           width: size.width,
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Text(
-                  "GAME RULES".tr,
-                  style: const TextStyle(
-                    fontSize: 30,
-                    color: Colors.red,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'EBGaramond',
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Text(
+                    "GAME RULES".tr,
+                    style: const TextStyle(
+                      fontSize: 30,
+                      color: Colors.red,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'EBGaramond',
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichTextWidget(
-                      order: "1) ",
-                      content:
-                          "The game can only start when the number of players is greater than 5 (minimum 6 persons)."
-                              .tr,
-                    ),
-                    const SizedBox(height: 5),
-                    RichTextWidget(
-                      order: "2) ",
-                      content: "Only the room creator can start the game.".tr,
-                    ),
-                    const SizedBox(height: 5),
-                    RichTextWidget(
-                      order: "3) ",
-                      content:
-                          "You will not be able to exit the room once the game is started."
-                              .tr,
-                    ),
-                    const SizedBox(height: 5),
-                    RichTextWidget(
-                      order: "4) ",
-                      content:
-                          "Each player has 5 votes. You cannot vote for one person 2 times and cannot vote for yourself."
-                              .tr,
-                    ),
-                    const SizedBox(height: 5),
-                    RichTextWidget(
-                      order: "5) ",
-                      content: "You can't leave the number of votes blank.".tr,
-                    ),
-                    const SizedBox(height: 5),
-                    RichTextWidget(
-                      order: "6) ",
-                      content:
-                          "Your voting results will be recorded only after pressing SUBMIT."
-                              .tr,
-                    ),
-                    const SizedBox(height: 5),
-                    RichTextWidget(
-                      order: "7) ",
-                      content:
-                          "Players who join the room without participating in voting will be placed in F class with 0 votes by default."
-                              .tr,
-                    ),
-                  ],
-                )
-              ],
+                  const SizedBox(height: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichTextWidget(
+                        order: "1) ",
+                        content:
+                            "The game can only start when the number of players is greater than 5 (minimum 6 persons)."
+                                .tr,
+                      ),
+                      const SizedBox(height: 5),
+                      RichTextWidget(
+                        order: "2) ",
+                        content: "Only the room creator can start the game.".tr,
+                      ),
+                      const SizedBox(height: 5),
+                      RichTextWidget(
+                        order: "3) ",
+                        content:
+                            "You will not be able to exit the room once the game is started."
+                                .tr,
+                      ),
+                      const SizedBox(height: 5),
+                      RichTextWidget(
+                        order: "4) ",
+                        content:
+                            "Each player has 5 votes. You cannot vote for one person 2 times and cannot vote for yourself."
+                                .tr,
+                      ),
+                      const SizedBox(height: 5),
+                      RichTextWidget(
+                        order: "5) ",
+                        content:
+                            "You can't leave the number of votes blank.".tr,
+                      ),
+                      const SizedBox(height: 5),
+                      RichTextWidget(
+                        order: "6) ",
+                        content:
+                            "Your voting results will be recorded only after pressing SUBMIT."
+                                .tr,
+                      ),
+                      const SizedBox(height: 5),
+                      RichTextWidget(
+                        order: "7) ",
+                        content:
+                            "Players who join the room without participating in voting will be placed in F class with 0 votes by default."
+                                .tr,
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         );

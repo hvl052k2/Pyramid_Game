@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyramid_game/src/constants/colors.dart';
-import 'package:pyramid_game/src/features/core/screens/home_screen/home_screen.dart';
+import 'package:pyramid_game/src/features/core/screens/home_screen/home_screen.dart'; 
 import 'package:pyramid_game/src/features/core/screens/result_screen/result_screen_widgets/custom_progress_bar.dart';
 
 class ResultScreen extends StatefulWidget {

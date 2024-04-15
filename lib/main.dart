@@ -8,6 +8,7 @@ import 'package:pyramid_game/src/features/core/screens/home_screen/home_screen.d
 import 'package:pyramid_game/src/utils/locale.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:device_preview/device_preview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +16,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await GetStorage.init();
+  // runApp(DevicePreview(builder: (context) => const MyApp()));
   runApp(const MyApp());
 }
 
@@ -49,6 +51,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      // useInheritedMediaQuery: true,
+      // builder: DevicePreview.appBuilder,
+      // locale: DevicePreview.locale(context),
       translations: LocaleString(),
       locale: box.read('language') == "English" || box.read('language') == null
           ? const Locale('en', 'US')

@@ -159,6 +159,7 @@ class _RoomScreenState extends State<RoomScreen> {
                   }
 
                   return ListView(
+                    padding: const EdgeInsets.only(bottom: 20),
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -168,7 +169,6 @@ class _RoomScreenState extends State<RoomScreen> {
                           children: [
                             isAdmin && !roomData["isCountdown"]
                                 ? Container(
-                                    width: 160,
                                     margin: const EdgeInsets.only(right: 10),
                                     padding: const EdgeInsets.all(5),
                                     decoration: BoxDecoration(
@@ -322,7 +322,7 @@ class _RoomScreenState extends State<RoomScreen> {
                       Text(
                         roomData["title"],
                         style: const TextStyle(
-                          fontSize: 30,
+                          fontSize: 25,
                           color: whiteColor,
                           fontFamily: 'EBGaramond',
                           fontWeight: FontWeight.w700,
@@ -393,7 +393,7 @@ class _RoomScreenState extends State<RoomScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 50),
+                      const SizedBox(height: 30),
                       Obx(
                         () => Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 40),

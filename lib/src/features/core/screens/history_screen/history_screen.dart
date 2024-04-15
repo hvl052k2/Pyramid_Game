@@ -13,6 +13,7 @@ class HistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         backgroundColor: whiteColor,
@@ -88,13 +89,17 @@ class HistoryScreen extends StatelessWidget {
                               children: [
                                 const Icon(Icons.track_changes),
                                 const SizedBox(width: 10),
-                                Text(
-                                  "${document?["title"]}",
-                                  style: const TextStyle(
-                                    color: primaryColor,
-                                    fontFamily: 'EBGaramond',
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18,
+                                SizedBox(
+                                  width: size.width * 0.5,
+                                  child: Text(
+                                    "${document?["title"]}",
+                                    style: const TextStyle(
+                                      color: primaryColor,
+                                      fontFamily: 'EBGaramond',
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 18,
+                                    ),
+                                    maxLines: 2,
                                   ),
                                 ),
                               ],
@@ -136,7 +141,7 @@ class HistoryScreen extends StatelessWidget {
                         ),
                         trailing: const Icon(
                           Icons.keyboard_arrow_right_rounded,
-                          size: 50,
+                          size: 35,
                         ),
                       ),
                     );

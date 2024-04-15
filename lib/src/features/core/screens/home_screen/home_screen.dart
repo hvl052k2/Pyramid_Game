@@ -51,27 +51,33 @@ class HomePage extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                border: Border.all(color: whiteColor, width: 1),
-                borderRadius: BorderRadius.circular(20),
-                color: whiteColor,
-              ),
-              child: Text(
-                'YOUR GAME'.tr,
-                style: const TextStyle(
-                  fontSize: 50,
-                  color: primaryColor,
-                  fontFamily: 'EBGaramond',
-                  fontWeight: FontWeight.w700,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: whiteColor, width: 1),
+                    borderRadius: BorderRadius.circular(20),
+                    color: whiteColor,
+                  ),
+                  child: Text(
+                    'YOUR GAME'.tr,
+                    style: const TextStyle(
+                      fontSize: 40,
+                      color: primaryColor,
+                      fontFamily: 'EBGaramond',
+                      fontWeight: FontWeight.w700,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                textAlign: TextAlign.center,
-              ),
+              ],
             ),
             const SizedBox(height: 30),
             const Icon(Icons.keyboard_double_arrow_down,
-                size: 80, color: whiteColor),
+                size: 50, color: whiteColor),
             const SizedBox(height: 30),
             SizedBox(
               width: double.infinity,
