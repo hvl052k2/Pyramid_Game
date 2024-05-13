@@ -52,26 +52,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future updateUser() {
-    CollectionReference user = FirebaseFirestore.instance.collection('Users');
-    return user.doc(auth.currentUser!.email).update({
+  Future updateUser() async {
+    final user = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth.currentUser!.email);
+    final data = {
       'userName': nameController.text,
       'phoneNumber': phoneController.text,
       'bio': bioController.text,
-      'avatarImage': avatarImageUrl,
-      'wallImage': wallImageUrl,
-    }).then((value) {
-      Get.snackbar(
-        "Information".tr,
-        "Update successfully".tr,
-        colorText: whiteColor,
-        backgroundColor: Colors.green,
-      );
-      setState(() {
-        isLoading = false;
-      });
-      Get.back();
-    });
+    };
+    await user.update(data);
   }
 
   void showUpdateDialog() {
@@ -116,7 +106,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             isLoading = true;
                           });
                           // await uploadImageToFirebase();
-                          updateUser();
+                          await updateUser();
+                          setState(() {
+                            isLoading = false;
+                          });
+                          Get.back();
+                          Get.snackbar(
+                            "Information".tr,
+                            "Update successfully".tr,
+                            colorText: whiteColor,
+                            backgroundColor: Colors.green,
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primaryColor,
