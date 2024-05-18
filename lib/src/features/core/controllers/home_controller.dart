@@ -95,8 +95,14 @@ class HomeController extends GetxController {
     bool isRoomCodeValid = await checkRoomCode();
     bool isPasswordValid = await checkPassword();
     bool isRoomStatusValid = await checkRoomStatus();
+    bool isBlocked = await checkBlocked();
+    bool isExist = await checkExist();
 
-    if (isRoomCodeValid && isPasswordValid && isRoomStatusValid) {
+    if (isRoomCodeValid &&
+        isPasswordValid &&
+        isRoomStatusValid &&
+        !isBlocked &&
+        !isExist) {
       try {
         await FirebaseFirestore.instance.runTransaction((transaction) async {
           final docSnapshot = await transaction
@@ -122,6 +128,7 @@ class HomeController extends GetxController {
         title.clear();
         password.clear();
       } catch (e) {
+        print(e.toString());
         return e.toString();
       }
     } else {
@@ -129,11 +136,53 @@ class HomeController extends GetxController {
         return "Room code does not exist".tr;
       } else if (!isPasswordValid) {
         return "Incorrect password, try again".tr;
+      } else if (isBlocked) {
+        return "You've been blocked from accessing this room".tr;
+      } else if (isExist) {
+        return "You've joined this room already".tr;
       } else {
         return "The room was closed".tr;
       }
     }
     return "";
+  }
+
+  Future<bool> checkBlocked() async {
+    List blockedList = [];
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final docSnapshot = await transaction.get(
+            FirebaseFirestore.instance.collection("Rooms").doc(roomCode.text));
+
+        if (!docSnapshot.exists) {
+          throw Exception("Room does not exist");
+        }
+
+        blockedList = List.from(docSnapshot.data()!["blockedList"]);
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+    return blockedList.any((item) => item["gmail"] == auth!.email);
+  }
+
+  Future<bool> checkExist() async {
+    List attenders = [];
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final docSnapshot = await transaction.get(
+            FirebaseFirestore.instance.collection("Rooms").doc(roomCode.text));
+
+        if (!docSnapshot.exists) {
+          throw Exception("Room does not exist");
+        }
+
+        attenders = List.from(docSnapshot.data()!["attenders"]);
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+    return attenders.any((item) => item["gmail"] == auth!.email);
   }
 
   Future createRoom() async {
@@ -169,6 +218,7 @@ class HomeController extends GetxController {
           "isCountdown": false,
           "title": title.text.toString(),
           "submitterList": [],
+          "blockedList": [],
         },
       );
 

@@ -31,18 +31,14 @@ class RoomController extends GetxController {
     isSwitched.value = value;
   }
 
-  Future updateSwitch(value) async {
-    await FirebaseFirestore.instance
-        .collection('Rooms')
-        .doc(roomId.value)
-        .update({"status": value});
+  Future updateSwitch(value) {
+    CollectionReference room = FirebaseFirestore.instance.collection('Rooms');
+    return room.doc(roomId.value).update({"status": value});
   }
 
-  Future updateIsCountdown(value) async {
-    await FirebaseFirestore.instance
-        .collection('Rooms')
-        .doc(roomId.value)
-        .update({"isCountdown": value});
+  Future updateIsCountdown(value) {
+    CollectionReference room = FirebaseFirestore.instance.collection('Rooms');
+    return room.doc(roomId.value).update({"isCountdown": value});
   }
 
   Future updateSubmitterList() async {
@@ -68,7 +64,7 @@ class RoomController extends GetxController {
             docSnapshot.reference, {"submitterList": submitterListFirebase});
       });
     } catch (e) {
-      // Handle error
+      // print(e.toString());
     }
   }
 
@@ -84,58 +80,79 @@ class RoomController extends GetxController {
 
         List resultFirebase = List.from(docSnapshot.data()!["result"]);
         resultFirebase.addAll(result);
+        // print("update result Firebase: $resultFirebase");
 
         transaction.update(docSnapshot.reference, {"result": resultFirebase});
       });
     } catch (e) {
-      // Handle error
+      // print(e.toString());
     }
   }
 
   bool checkDuplicateEmail() {
-    final emails = {
-      jsonDecode(userVoted1.value)["gmail"],
-      jsonDecode(userVoted2.value)["gmail"],
-      jsonDecode(userVoted3.value)["gmail"],
-      jsonDecode(userVoted4.value)["gmail"],
-      jsonDecode(userVoted5.value)["gmail"],
+    Map outputMap1 = jsonDecode(userVoted1.value);
+    Map outputMap2 = jsonDecode(userVoted2.value);
+    Map outputMap3 = jsonDecode(userVoted3.value);
+    Map outputMap4 = jsonDecode(userVoted4.value);
+    Map outputMap5 = jsonDecode(userVoted5.value);
+
+    Set uniqueValues = {
+      outputMap1["gmail"],
+      outputMap2["gmail"],
+      outputMap3["gmail"],
+      outputMap4["gmail"],
+      outputMap5["gmail"],
     };
-    return emails.length < 5;
+
+    // Kiểm tra xem có giá trị trùng lặp hay không
+    if (uniqueValues.length < 5) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   bool checkVoteForYourSelf() {
-    final emails = {
-      json.decode(userVoted1.value)["gmail"],
-      json.decode(userVoted2.value)["gmail"],
-      json.decode(userVoted3.value)["gmail"],
-      json.decode(userVoted4.value)["gmail"],
-      json.decode(userVoted5.value)["gmail"],
+    Map outputMap1 = json.decode(userVoted1.value);
+    Map outputMap2 = json.decode(userVoted2.value);
+    Map outputMap3 = json.decode(userVoted3.value);
+    Map outputMap4 = json.decode(userVoted4.value);
+    Map outputMap5 = json.decode(userVoted5.value);
+    Set uniqueValues = {
+      outputMap1["gmail"],
+      outputMap2["gmail"],
+      outputMap3["gmail"],
+      outputMap4["gmail"],
+      outputMap5["gmail"],
     };
-    return emails.contains(auth!.email.toString());
+
+    bool isVoteForYourSelf = uniqueValues.contains(auth!.email.toString());
+    return isVoteForYourSelf;
   }
 
   Future updateRankLists(List rankLists) async {
     final rank = ["A", "B", "C", "D", "F"];
-    final rankMap = Map.fromIterables(rank, rankLists);
-
-    await FirebaseFirestore.instance
-        .collection('Rooms')
-        .doc(roomId.value)
-        .update({"rankListsMap": rankMap});
+    var myMap = {};
+    for (var i = 0; i < rank.length; i++) {
+      myMap[rank[i]] = rankLists[i];
+    }
+    CollectionReference room = FirebaseFirestore.instance.collection('Rooms');
+    await room.doc(roomId.value).update({"rankListsMap": myMap});
   }
 
   Future countVoted() async {
-    final docSnapshot = await FirebaseFirestore.instance
+    DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
         .collection("Rooms")
         .doc(roomId.value)
         .get();
-    final resultFirebase = docSnapshot["result"];
+    List resultFirebase = docSnapshot["result"];
 
-    final countMap = <String, Map<String, dynamic>>{};
-    for (final item in resultFirebase) {
-      final key = item['gmail'];
+    Map countMap = {};
+
+    for (var item in resultFirebase) {
+      String key = item['gmail'];
       if (countMap.containsKey(key)) {
-        countMap[key]!['count'] += 1;
+        countMap[key]?['count'] += 1;
       } else {
         countMap[key] = {
           'name': item['name'],
@@ -145,11 +162,12 @@ class RoomController extends GetxController {
       }
     }
 
-    final countVotedMap = countMap.values.toList();
-    final sortedArrayWithCountAndName =
+    List countVotedMap = countMap.values.toList();
+    List sortedArrayWithCountAndName =
         await sortArrayWithCountAndName(countVotedMap);
-    final rankLists = await divideRankList(sortedArrayWithCountAndName);
+    List rankLists = await divideRankList(sortedArrayWithCountAndName);
 
+    // update rank list in firebase
     await updateRankLists(rankLists);
 
     toggleIsLoading(false);
@@ -161,8 +179,10 @@ class RoomController extends GetxController {
   }
 
   List adjustRankF(List myArrayJson, List attenderNoVote) {
+    // Kiểm tra xem trong myArrayJson có phần tử nào trùng rankFList hay không,
+    // nếu có thì giá trị của key "count" của phần tử đó trong myArrayJson sẽ được gán bằng 0
     myArrayJson = myArrayJson.map((item1) {
-      for (final item2 in attenderNoVote) {
+      for (var item2 in attenderNoVote) {
         if (item2['gmail'] == item1['gmail']) {
           return {...item1, 'count': 0};
         }
@@ -170,76 +190,121 @@ class RoomController extends GetxController {
       return item1;
     }).toList();
 
-    for (final item in attenderNoVote) {
-      if (!myArrayJson.any((element) => element['gmail'] == item['gmail'])) {
+    // Thêm người không tham gia voite
+    for (var item in attenderNoVote) {
+      if (!containsMap(myArrayJson, item)) {
         myArrayJson.add(item);
       }
     }
+
+    // print("myArrayJson after check with adjustRankF: $myArrayJson");
     return myArrayJson;
   }
 
-  List checkAttenderNoVote(List submitterList, List attenders) {
-    final attenderNoVote = attenders
-        .where((item1) =>
-            !submitterList.any((item2) => item2['gmail'] == item1['gmail']))
-        .toList();
+  bool containsMap(List result, Map map) {
+    return result.any((item) => map['gmail'] == item['gmail']);
+  }
 
-    return attenderNoVote.map((item) => {...item, 'count': 0}).toList();
+  List checkAttenderNoVote(List submitterList, List attenders) {
+    // Xuất ra mảng chứa trong attenders nhưng không có trong submitterList
+    List attenderNoVote = attenders.where((item1) {
+      return !submitterList.any((item2) {
+        return item2['gmail'] == item1['gmail'];
+      });
+    }).toList();
+
+    // Thêm key "count" có giá trị 0 vào mảng vừa xuất ra.
+    if (attenderNoVote.isNotEmpty) {
+      attenderNoVote = attenderNoVote.map((item) {
+        return {...item, 'count': 0};
+      }).toList();
+    }
+
+    // print("AttenderNoVote: $attenderNoVote");
+
+    return attenderNoVote;
   }
 
   List checkSubmitterDontReceiveAnyVote(List submitterList, List list) {
-    final submitterDontReceiveAnyVote = submitterList
-        .where(
-            (item) => !list.any((element) => element['gmail'] == item['gmail']))
-        .toList();
+    // Xuất ra mảng chứa trong result nhưng không có trong submitterList
+    List submitterDontReceiveAnyVote =
+        submitterList.where((item) => !containsMap(list, item)).toList();
 
-    return submitterDontReceiveAnyVote
-        .map((item) => {...item, 'count': 0})
-        .toList();
+    // Thêm key "count" có giá trị 0 vào mảng vừa xuất ra.
+    if (submitterDontReceiveAnyVote.isNotEmpty) {
+      submitterDontReceiveAnyVote = submitterDontReceiveAnyVote.map((item) {
+        return {...item, 'count': 0};
+      }).toList();
+    }
+    // print("SubmitterDontReceiveAnyVote: $submitterDontReceiveAnyVote");
+
+    return submitterDontReceiveAnyVote;
   }
 
   Future<List> sortArrayWithCountAndName(List myArrayJson) async {
-    final docSnapshot = await FirebaseFirestore.instance
+    DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
         .collection("Rooms")
         .doc(roomId.value)
         .get();
-    final submitterListFirebase = docSnapshot["submitterList"];
-    final attendersFirebase = docSnapshot["attenders"];
+    List submitterListFirebase = docSnapshot["submitterList"];
+    List attendersFirebase = docSnapshot["attenders"];
 
-    final attenderNoVote =
+    List attenderNoVote =
         checkAttenderNoVote(submitterListFirebase, attendersFirebase);
-    final adjustMyArrayJson = adjustRankF(myArrayJson, attenderNoVote);
+    List adjustMyArrayJson = adjustRankF(myArrayJson, attenderNoVote);
 
-    final submitterDontReceiveAnyVote = checkSubmitterDontReceiveAnyVote(
+    List submitterDontReceiveAnyVote = checkSubmitterDontReceiveAnyVote(
         submitterListFirebase, adjustMyArrayJson);
 
     adjustMyArrayJson.addAll(submitterDontReceiveAnyVote);
+    // print(
+    //     "adjustMyArrayJson after addAll submitterDontReceiveAnyVote: $adjustMyArrayJson");
 
     adjustMyArrayJson.sort((a, b) {
-      final countComparison = b['count'].compareTo(a['count']);
-      if (countComparison != 0) {
-        return countComparison;
+      var comparison = b['count'].compareTo(a['count']);
+      if (comparison == 0) {
+        var aName = a['name'].split(' ').last;
+        var bName = b['name'].split(' ').last;
+        comparison = aName.compareTo(bName);
       }
-      final aName = a['name'].split(' ').last;
-      final bName = b['name'].split(' ').last;
-      return aName.compareTo(bName);
+      return comparison;
     });
+
+    // print("adjustMyArrayJson after sort: $adjustMyArrayJson");
+
     return adjustMyArrayJson;
   }
 
   Future<List> divideRankList(List sortedResult) async {
-    final f = sortedResult.where((item) => item["count"] == 0).toList();
-    sortedResult.removeWhere((item) => item["count"] == 0);
+    List rankLists = [];
 
-    final len = sortedResult.length;
-    final a = sortedResult.sublist(0, (len * 0.1).round());
-    final b = sortedResult.sublist(a.length, a.length + (len * 0.2).round());
-    final c = sortedResult.sublist(
+    List f = []; // Tạo một danh sách rỗng để lưu trữ các phần tử có count = 0
+    // Loại bỏ các phần tử có count = 0 khỏi mảng gốc
+    sortedResult.removeWhere((item) {
+      if (item["count"] == 0) {
+        f.add(item);
+        return true;
+      }
+      return false;
+    });
+
+    int len = sortedResult.length;
+    List a = sortedResult.sublist(0, (len * 0.1).round());
+    List b = sortedResult.sublist(a.length, a.length + (len * 0.2).round());
+    List c = sortedResult.sublist(
         a.length + b.length, a.length + b.length + (len * 0.35).round());
-    final d = sortedResult.sublist(a.length + b.length + c.length,
+    List d = sortedResult.sublist(a.length + b.length + c.length,
         a.length + b.length + c.length + (len * 0.25).round());
 
-    return [a, b, c, d, f];
+    rankLists
+      ..add(a)
+      ..add(b)
+      ..add(c)
+      ..add(d)
+      ..add(f);
+
+    // print("rankLists after divide: $rankLists");
+    return rankLists;
   }
 
   void leaveRoom() async {
@@ -259,9 +324,8 @@ class RoomController extends GetxController {
         transaction.update(docSnapshot.reference, {"attenders": attenders});
       });
       Get.off(() => HomePage());
-      showInforDialog("You've left the room".tr);
     } catch (e) {
-      // Handle error
+      // print(e.toString());
     }
   }
 
@@ -289,16 +353,16 @@ class RoomController extends GetxController {
         userVoted3.value != "" &&
         userVoted4.value != "" &&
         userVoted5.value != "") {
-      final isDuplicate = checkDuplicateEmail();
-      final isVoteForYourSelf = checkVoteForYourSelf();
+      bool isDuplicate = checkDuplicateEmail();
+      bool isVoteForYourSelf = checkVoteForYourSelf();
       if (!isDuplicate) {
         if (!isVoteForYourSelf) {
           toggleIsLoading(true);
-          final outputMap1 = json.decode(userVoted1.value);
-          final outputMap2 = json.decode(userVoted2.value);
-          final outputMap3 = json.decode(userVoted3.value);
-          final outputMap4 = json.decode(userVoted4.value);
-          final outputMap5 = json.decode(userVoted5.value);
+          Map outputMap1 = json.decode(userVoted1.value);
+          Map outputMap2 = json.decode(userVoted2.value);
+          Map outputMap3 = json.decode(userVoted3.value);
+          Map outputMap4 = json.decode(userVoted4.value);
+          Map outputMap5 = json.decode(userVoted5.value);
           result
             ..add(outputMap1)
             ..add(outputMap2)
@@ -314,7 +378,7 @@ class RoomController extends GetxController {
         showInforDialog("You voted the same person".tr);
       }
     } else {
-      showInforDialog("Be careful, some votes are blank".tr);
+      showInforDialog("Be carefu, some votes are blank".tr);
     }
   }
 

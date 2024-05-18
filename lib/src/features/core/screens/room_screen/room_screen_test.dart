@@ -1,3 +1,4 @@
+// room_screen
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,10 +24,12 @@ class RoomScreen extends StatefulWidget {
 class _RoomScreenState extends State<RoomScreen> {
   final auth = FirebaseAuth.instance.currentUser;
 
+  //
   bool isCountdown = false;
   bool isAdmin = false;
   bool canStart = false;
   final roomController = Get.put(RoomController());
+  //
 
   final CountdownController timerController =
       CountdownController(autoStart: false);
@@ -37,11 +40,13 @@ class _RoomScreenState extends State<RoomScreen> {
         .collection("Rooms")
         .doc(widget.roomId)
         .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        adminEmail = documentSnapshot["admin"];
-      }
-    });
+        .then(
+      (DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          adminEmail = documentSnapshot["admin"];
+        }
+      },
+    );
     if (adminEmail == auth?.email) {
       setState(() {
         isAdmin = true;
@@ -62,7 +67,7 @@ class _RoomScreenState extends State<RoomScreen> {
         isCountdown = true;
       });
       roomController.updateIsCountdown(true);
-      roomController.toggleIsSwitched(false);
+      roomController.updateSwitch(false);
     } else {
       roomController.showInforDialog(
           "The number of players is less than 6, it is impossible to start."
@@ -148,18 +153,19 @@ class _RoomScreenState extends State<RoomScreen> {
                   final roomData =
                       snapshot.data!.data() as Map<String, dynamic>;
 
-                  if (!roomController
-                      .checkExist(List.from(roomData["attenders"]))) {
-                    Future.delayed(Duration.zero, () {
+                  Future.delayed(Duration.zero, () {
+                    if (!roomController
+                        .checkExist(List.from(roomData["attenders"]))) {
                       Get.back();
-                      roomController.showInforDialog("You've left the room".tr);
-                    });
-                  }
+                      roomController.showInforDialog(
+                          "You've been forced out of the room".tr);
+                    }
+                  });
 
                   if (List.from(roomData["attenders"]).length > 5) {
                     canStart = true;
                   }
-                  if (roomData["isCountdown"] && !isCountdown) {
+                  if (roomData["isCountdown"]) {
                     timerController.start();
                     isCountdown = true;
                   }

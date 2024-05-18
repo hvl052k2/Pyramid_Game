@@ -117,6 +117,20 @@ class LocaleString extends Translations {
               'You cannot leave the room while voting.',
           "By registering, you agree to": "By registering, you agree to",
           'our terms and conditions': 'our terms and conditions',
+          "You've been blocked from accessing this room":
+              "You've been blocked from accessing this room",
+          "You've joined this room already": "You've joined this room already",
+          "You've been forced out of the room":
+              "You've been forced out of the room",
+          "ATTENDERS": "ATTENDERS",
+          'Search by name or gmail': 'Search by name or gmail',
+          "Are you sure to block this attender?":
+              "Are you sure to block this attender?",
+          "Are you sure to kick this attender?":
+              "Are you sure to kick this attender?",
+          "Empty List": "Empty List",
+          "Unblock this attender?": "Unblock this attender?",
+          "You've left the room": "You've left the room",
         },
         'vi_Vie': {
           'Language': 'Ngôn ngữ',
@@ -236,6 +250,19 @@ class LocaleString extends Translations {
               'Bạn không thể rời khỏi phòng khi đang bỏ phiếu.',
           'By registering, you agree to': 'Bằng cách đăng ký, bạn đồng ý với ',
           'our terms and conditions.': 'điều khoản và điều kiện của chúng tôi.',
+          "You've been blocked from accessing this room":
+              "Bạn đã bị chặn truy cập vào phòng này",
+          "You've joined this room already": "Bạn đã tham gia phòng này rồi",
+          "You've been forced out of the room": "Bạn bị buộc rời khỏi phòng",
+          "ATTENDERS": "NGƯỜI THAM DỰ",
+          'Search by name or gmail': 'Tìm kiếm theo tên hoặc gmail',
+          "Are you sure to block this attender?":
+              "Bạn chắc chắn muốn chặn người tham dự này?",
+          "Are you sure to kick this attender?":
+              "Bạn chắc chắn muốn đuổi người tham dự này?",
+          "Empty List": "Danh sách trống",
+          "Unblock this attender?": "Bỏ chặn người tham dự này?",
+          "You've left the room": "Bạn đã rời khỏi phòng",
         }
       };
 }
