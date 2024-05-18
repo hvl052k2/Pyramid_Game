@@ -259,7 +259,6 @@ class RoomController extends GetxController {
         transaction.update(docSnapshot.reference, {"attenders": attenders});
       });
       Get.off(() => HomePage());
-      showInforDialog("You've left the room".tr);
     } catch (e) {
       // Handle error
     }

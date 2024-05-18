@@ -148,10 +148,10 @@ class _RoomScreenState extends State<RoomScreen> {
                   final roomData =
                       snapshot.data!.data() as Map<String, dynamic>;
 
-                  Future.delayed(const Duration(seconds: 1), () {
+                  Future.delayed(const Duration(seconds: 3), () {
                     // Không được xóa dòng print này
-                    print(
-                        "checkExist: ${roomController.checkExist(List.from(roomData["attenders"]))}");
+                    // print(
+                    //     "checkExist: ${roomController.checkExist(List.from(roomData["attenders"]))}");
                     if (!roomController
                         .checkExist(List.from(roomData["attenders"]))) {
                       Get.back();
