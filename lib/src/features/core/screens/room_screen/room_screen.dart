@@ -148,13 +148,16 @@ class _RoomScreenState extends State<RoomScreen> {
                   final roomData =
                       snapshot.data!.data() as Map<String, dynamic>;
 
-                  if (!roomController
-                      .checkExist(List.from(roomData["attenders"]))) {
-                    Future.delayed(Duration.zero, () {
+                  Future.delayed(const Duration(seconds: 1), () {
+                    // Không được xóa dòng print này
+                    print(
+                        "checkExist: ${roomController.checkExist(List.from(roomData["attenders"]))}");
+                    if (!roomController
+                        .checkExist(List.from(roomData["attenders"]))) {
                       Get.back();
                       roomController.showInforDialog("You've left the room".tr);
-                    });
-                  }
+                    }
+                  });
 
                   if (List.from(roomData["attenders"]).length > 5) {
                     canStart = true;
