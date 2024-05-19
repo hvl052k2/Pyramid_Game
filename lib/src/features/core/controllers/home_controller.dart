@@ -148,7 +148,7 @@ class HomeController extends GetxController {
   }
 
   Future<bool> checkBlocked() async {
-    List blockedList = [];
+    late List blockedList;
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final docSnapshot = await transaction.get(
@@ -167,7 +167,7 @@ class HomeController extends GetxController {
   }
 
   Future<bool> checkExist() async {
-    List attenders = [];
+    late List attenders;
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final docSnapshot = await transaction.get(
@@ -219,6 +219,7 @@ class HomeController extends GetxController {
           "title": title.text.toString(),
           "submitterList": [],
           "blockedList": [],
+          "isKickedOut": false,
         },
       );
 

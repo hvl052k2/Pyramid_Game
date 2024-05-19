@@ -38,6 +38,13 @@ class RoomController extends GetxController {
         .update({"status": value});
   }
 
+  Future updateIsKickedOut(bool value) async {
+    await FirebaseFirestore.instance
+        .collection('Rooms')
+        .doc(roomId.value)
+        .update({"isKickedOut": value});
+  }
+
   Future updateIsCountdown(value) async {
     await FirebaseFirestore.instance
         .collection('Rooms')

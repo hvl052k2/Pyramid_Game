@@ -7,6 +7,7 @@ import 'package:pyramid_game/src/constants/colors.dart';
 import 'package:pyramid_game/src/constants/image_strings.dart';
 import 'package:pyramid_game/src/features/core/controllers/room_controller.dart';
 import 'package:pyramid_game/src/features/core/screens/attenders_screen/attenders_screen.dart';
+import 'package:pyramid_game/src/features/core/screens/home_screen/home_screen.dart';
 import 'package:pyramid_game/src/features/core/screens/room_screen/room_widgets/vote_form_widget.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
@@ -148,20 +149,21 @@ class _RoomScreenState extends State<RoomScreen> {
                   final roomData =
                       snapshot.data!.data() as Map<String, dynamic>;
 
-                  Future.delayed(const Duration(seconds: 3), () {
-                    // Không được xóa dòng print này
-                    // print(
-                    //     "checkExist: ${roomController.checkExist(List.from(roomData["attenders"]))}");
+                  Future.delayed(Duration.zero, () {
                     if (!roomController
                         .checkExist(List.from(roomData["attenders"]))) {
-                      Get.back();
-                      roomController.showInforDialog("You've left the room".tr);
+                      if (roomData["isKickedOut"]) {
+                        Get.offAll(() => HomePage());
+                        roomController.showInforDialog(
+                            "You've been forced out of the room".tr);
+                      }
                     }
                   });
 
                   if (List.from(roomData["attenders"]).length > 5) {
                     canStart = true;
                   }
+
                   if (roomData["isCountdown"] && !isCountdown) {
                     timerController.start();
                     isCountdown = true;
