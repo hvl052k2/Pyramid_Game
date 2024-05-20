@@ -9,8 +9,8 @@ class SignInController extends GetxController {
   RxBool isLoading = false.obs;
 
   final formfield = GlobalKey<FormState>();
-  final email = TextEditingController();
-  final password = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   void toggleObscured() {
     obscured.value = !obscured.value;
@@ -33,7 +33,10 @@ class SignInController extends GetxController {
           colorText: whiteColor,
           backgroundColor: Colors.green,
         );
-        Get.offAll(HomePage());
+        emailController.clear();
+        passwordController.clear();
+        // print("________________________credential: ${credential.user!.email}");
+        Get.offAll(() => HomePage());
       } else {
         toggleIsLoading(false);
         Get.defaultDialog(

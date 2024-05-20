@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 class ForgotPasswordController extends GetxController {
   RxBool isLoading = false.obs;
 
-  final auth = FirebaseAuth.instance;
   final formfield = GlobalKey<FormState>();
   final email = TextEditingController();
 
@@ -15,6 +14,7 @@ class ForgotPasswordController extends GetxController {
   }
 
   void submit(String emailText) async {
+    final auth = FirebaseAuth.instance;
     final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
         .collection('Users')
         .doc(emailText)

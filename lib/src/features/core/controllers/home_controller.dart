@@ -14,7 +14,6 @@ class HomeController extends GetxController {
   final password = TextEditingController();
   final roomCode = TextEditingController();
   final title = TextEditingController();
-  final auth = FirebaseAuth.instance.currentUser;
 
   void toggleIsLoading(bool value) {
     isLoading.value = value;
@@ -87,16 +86,20 @@ class HomeController extends GetxController {
   }
 
   Future<String> joinRoom(String roomId) async {
+    final auth = FirebaseAuth.instance.currentUser;
+    // print("____________________User gmail: ${auth!.email}");
     final userData = await FirebaseFirestore.instance
         .collection("Users")
-        .doc(auth?.email)
+        .doc(auth!.email)
         .get();
     String userName = userData["userName"];
+    // print("____________________User name: $userName");
     bool isRoomCodeValid = await checkRoomCode();
     bool isPasswordValid = await checkPassword();
     bool isRoomStatusValid = await checkRoomStatus();
     bool isBlocked = await checkBlocked();
-    bool isExist = await checkExist();
+    bool isExist =
+        await checkExist(); // Tránh trường hợp tài khoản đăng nhập trên 2 máy => xung đột
 
     if (isRoomCodeValid &&
         isPasswordValid &&
@@ -114,7 +117,7 @@ class HomeController extends GetxController {
 
           List attenders = List.from(docSnapshot.data()!["attenders"]);
           attenders.add({
-            "gmail": auth?.email,
+            "gmail": auth.email,
             "name": userName,
           });
 
@@ -136,18 +139,19 @@ class HomeController extends GetxController {
         return "Room code does not exist".tr;
       } else if (!isPasswordValid) {
         return "Incorrect password, try again".tr;
+      } else if (!isRoomStatusValid) {
+        return "The room was closed".tr;
       } else if (isBlocked) {
         return "You've been blocked from accessing this room".tr;
       } else if (isExist) {
         return "You've joined this room already".tr;
-      } else {
-        return "The room was closed".tr;
       }
     }
     return "";
   }
 
   Future<bool> checkBlocked() async {
+    final auth = FirebaseAuth.instance.currentUser;
     late List blockedList;
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -167,6 +171,7 @@ class HomeController extends GetxController {
   }
 
   Future<bool> checkExist() async {
+    final auth = FirebaseAuth.instance.currentUser;
     late List attenders;
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -186,6 +191,7 @@ class HomeController extends GetxController {
   }
 
   Future createRoom() async {
+    final auth = FirebaseAuth.instance.currentUser;
     late String roomId;
     late String userName;
     try {
@@ -206,9 +212,9 @@ class HomeController extends GetxController {
 
       await FirebaseFirestore.instance.collection("Rooms").doc(roomId).set(
         {
-          "admin": auth?.email,
+          "admin": auth.email,
           "attenders": [
-            {"gmail": auth?.email, "name": userName}
+            {"gmail": auth.email, "name": userName}
           ],
           "createdAt": DateTime.now(),
           "password": password.text.toString().trim(),

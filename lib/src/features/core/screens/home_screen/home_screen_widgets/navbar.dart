@@ -20,15 +20,17 @@ class _NavBarState extends State<NavBar> {
   final auth = FirebaseAuth.instance;
 
   void signOut() async {
-    await auth.signOut().then((value) => {
-          Get.snackbar(
-            "Information".tr,
-            "Sign out successfully".tr,
-            colorText: whiteColor,
-            backgroundColor: Colors.green,
-          ),
-          Get.offAll(() => SignInScreen())
-        });
+    await auth.signOut().then(
+          (value) => {
+            Get.snackbar(
+              "Information".tr,
+              "Sign out successfully".tr,
+              colorText: whiteColor,
+              backgroundColor: Colors.green,
+            ),
+            Get.offAll(() => SignInScreen())
+          },
+        );
   }
 
   @override

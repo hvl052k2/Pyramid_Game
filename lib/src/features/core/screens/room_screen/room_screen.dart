@@ -63,7 +63,7 @@ class _RoomScreenState extends State<RoomScreen> {
         isCountdown = true;
       });
       roomController.updateIsCountdown(true);
-      roomController.toggleIsSwitched(false);
+      roomController.updateSwitch(false);
     } else {
       roomController.showInforDialog(
           "The number of players is less than 6, it is impossible to start."
@@ -164,9 +164,9 @@ class _RoomScreenState extends State<RoomScreen> {
                     canStart = true;
                   }
 
-                  if (roomData["isCountdown"] && !isCountdown) {
-                    timerController.start();
+                  if (roomData["isCountdown"]) {
                     isCountdown = true;
+                    timerController.start();
                   }
 
                   return ListView(

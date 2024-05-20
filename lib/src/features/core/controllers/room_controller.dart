@@ -9,8 +9,6 @@ import 'package:pyramid_game/src/features/core/screens/result_screen/result_scre
 import 'package:pyramid_game/src/features/core/screens/room_screen/room_widgets/richText_widget.dart';
 
 class RoomController extends GetxController {
-  final auth = FirebaseAuth.instance.currentUser;
-
   RxString userVoted1 = "".obs;
   RxString userVoted2 = "".obs;
   RxString userVoted3 = "".obs;
@@ -53,6 +51,8 @@ class RoomController extends GetxController {
   }
 
   Future updateSubmitterList() async {
+    final auth = FirebaseAuth.instance.currentUser;
+
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final docSnapshot = await transaction.get(
@@ -69,7 +69,7 @@ class RoomController extends GetxController {
         List submitterListFirebase =
             List.from(docSnapshot.data()!["submitterList"]);
         submitterListFirebase
-            .add({"name": userData["userName"], "gmail": auth!.email});
+            .add({"name": userData["userName"], "gmail": auth.email});
 
         transaction.update(
             docSnapshot.reference, {"submitterList": submitterListFirebase});
@@ -111,6 +111,8 @@ class RoomController extends GetxController {
   }
 
   bool checkVoteForYourSelf() {
+    final auth = FirebaseAuth.instance.currentUser;
+
     final emails = {
       json.decode(userVoted1.value)["gmail"],
       json.decode(userVoted2.value)["gmail"],
@@ -240,16 +242,17 @@ class RoomController extends GetxController {
 
     final len = sortedResult.length;
     final a = sortedResult.sublist(0, (len * 0.1).round());
-    final b = sortedResult.sublist(a.length, a.length + (len * 0.2).round());
+    final b = sortedResult.sublist(a.length, a.length + (len * 0.15).round());
     final c = sortedResult.sublist(
-        a.length + b.length, a.length + b.length + (len * 0.35).round());
+        a.length + b.length, a.length + b.length + (len * 0.25).round());
     final d = sortedResult.sublist(a.length + b.length + c.length,
-        a.length + b.length + c.length + (len * 0.25).round());
+        a.length + b.length + c.length + (len * 0.5).round());
 
     return [a, b, c, d, f];
   }
 
   void leaveRoom() async {
+    final auth = FirebaseAuth.instance.currentUser;
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final docSnapshot = await transaction.get(
@@ -272,6 +275,8 @@ class RoomController extends GetxController {
   }
 
   bool checkExist(List attenders) {
+    final auth = FirebaseAuth.instance.currentUser;
+
     return attenders.any((item) => item["gmail"] == auth!.email);
   }
 

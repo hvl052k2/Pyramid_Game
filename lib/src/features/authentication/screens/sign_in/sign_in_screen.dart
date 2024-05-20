@@ -91,7 +91,7 @@ class SignInScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         CustomTextFormField(
-                          textController: signInController.email,
+                          textController: signInController.emailController,
                           hintText: "Email".tr,
                           prefixIcon: Icons.email_outlined,
                           validator: (value) {
@@ -111,7 +111,7 @@ class SignInScreen extends StatelessWidget {
                         Obx(
                           () => CustomTextFormField(
                             obscured: signInController.obscured.value,
-                            textController: signInController.password,
+                            textController: signInController.passwordController,
                             hintText: "Password".tr,
                             prefixIcon: Icons.lock_outline,
                             suffixIcon: IconButton(
@@ -128,7 +128,8 @@ class SignInScreen extends StatelessWidget {
                                   .hasMatch(value!);
                               if (value.isEmpty) {
                                 return "Enter password.".tr;
-                              } else if (signInController.password.text.length <
+                              } else if (signInController
+                                      .passwordController.text.length <
                                   8) {
                                 return "Password length should not be less than 8 characters."
                                     .tr;
@@ -179,8 +180,12 @@ class SignInScreen extends StatelessWidget {
                               .validate()) {
                             signInController.toggleIsLoading(true);
                             signInController.signIn(
-                              signInController.email.text.toString().trim(),
-                              signInController.password.text.toString().trim(),
+                              signInController.emailController.text
+                                  .toString()
+                                  .trim(),
+                              signInController.passwordController.text
+                                  .toString()
+                                  .trim(),
                             );
                           }
                         },
